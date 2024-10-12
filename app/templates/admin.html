@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Отчёт по продажам</title>
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/layout.css"> <!-- для общей структуры -->
+    <link rel="stylesheet" href="/static/css/buttons.css"> <!-- для кнопок внизу экрана -->
+    <link rel="stylesheet" href="/static/css/tables.css"> <!-- для отображения данных в таблице (например, задачи или статистика) -->
+
+</head>
+<body>
+    <h1>Отчёт по продажам за сегодня</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Логин</th>
+                <th>Название товара</th>
+                <th>Количество</th>
+                <th>Время продажи</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sale, product in sales %}
+            <tr>
+                <td>{{ sale.username }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ sale.quantity }}</td>
+                <td>{{ sale.sale_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="buttons">
+        <button type="button" class="button button-yellow" onclick="window.history.back()">Назад</button>
+    </div>
+
+</body>
+</html>

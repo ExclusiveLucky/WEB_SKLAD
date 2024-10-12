@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Задачи</title>
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/layout.css"> <!-- для общей структуры -->
+    <link rel="stylesheet" href="/static/css/buttons.css"> <!-- для кнопок -->
+    <link rel="stylesheet" href="/static/css/tables.css"> <!-- для отображения задач в виде таблицы -->
+
+</head>
+<body>
+    <h1>Задачи</h1>
+
+    <!-- Список задач -->
+    <div class="tasks">
+        <p>Здесь будут отображаться задачи</p>
+        <!-- Для динамической отрисовки задач используем цикл -->
+        {% for task in tasks %}
+        <div class="task">
+            <p>{{ task.task_description }}</p>
+            <p>Статус: {{ "Выполнено" if task.is_completed else "Не выполнено" }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Кнопки в нижней части экрана -->
+    <div class="buttons">
+        <button type="button" class="button button-green" onclick="startShift()">Начать смену</button>
+        <button type="button" class="button button-yellow" onclick="window.history.back()">Назад</button>
+    </div>
+
+    <script>
+        function startShift() {
+            // Логика для начала смены
+            fetch('/start-shift', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Смена начата!');
+                // Возможно обновление интерфейса или редирект
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+    </script>
+</body>
+</html>

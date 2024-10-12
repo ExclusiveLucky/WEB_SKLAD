@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Вход</title>
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/forms.css">
+    <link rel="stylesheet" href="/static/css/buttons.css">
+    <!-- <link rel="preload" href="/static/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/static/style.css"></noscript>
+    <link rel="stylesheet" type="text/css" href="/static/style.css?v={{ timestamp }}"> -->
+</head>
+<body>
+    <div class="login-container">
+        <h1>Вход</h1>
+        <form method="post" action="/login" class="login-form">
+            <div class="login-field">
+                <label for="username">Логин:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="login-field">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="button button-green">Войти</button>
+        </form>
+
+        <!-- Блок для отображения ошибок -->
+        <div id="error-message" style="color: red;"></div>
+
+        <!-- Кнопка для перехода на страницу регистрации (внутри login-container) -->
+        <div class="register-container">
+            <p>Нет аккаунта?</p>
+            <button class="button button-yellow" onclick="window.location.href='/register'">Регистрация</button>
+        </div>
+    </div>
+
+    <script>
+        // Получаем параметры из URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorMessage = urlParams.get('error');
+
+        // Если есть ошибка, отображаем её
+        if (errorMessage) {
+            document.getElementById('error-message').textContent = errorMessage;
+        }
+    </script>
+</body>
+</html>

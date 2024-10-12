@@ -1,0 +1,82 @@
+/* Основные стили для всех кнопок */
+.button {
+    background-color: #2980b9;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.button:hover {
+    background-color: #3498db;
+}
+
+/* Специальные стили для цветовых схем кнопок */
+.button-orange {
+    background-color: #f39c12;
+}
+
+.button-orange:hover {
+    background-color: #e67e22;
+}
+
+.button-yellow {
+    background-color: #f1c40f;
+}
+
+.button-yellow:hover {
+    background-color: #f39c12;
+}
+
+.button-green {
+    background-color: #27ae60;
+}
+
+.button-green:hover {
+    background-color: #2ecc71;
+}
+
+.button-red {
+    background-color: #e74c3c;
+}
+
+.button-red:hover {
+    background-color: #c0392b;
+}
+
+/* Специфичные стили для кнопок */
+.register-button .cancel-button{
+    margin-top: 20px;
+}
+
+
+/* Ошибка */
+#error-message {
+    margin-top: 10px;
+    color: red;
+}
+
+/* Фиксируем кнопки внизу экрана */
+.buttons {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #34495e;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    z-index: 1000;
+}
+
+/* Кнопки управления количеством */
+.quantity-controls button {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    margin: 0 10px;
+}

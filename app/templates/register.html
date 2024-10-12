@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/forms.css">
+    <link rel="stylesheet" href="/static/css/buttons.css">
+
+</head>
+<body>
+    <div class="register-container">
+        <h1>Регистрация</h1>
+        <form method="post" action="/register" class="register-form">
+            <div class="register-field">
+                <label for="username">Логин:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="register-field">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <div class="register-field">
+                <label for="first_name">Имя:</label>
+                <input type="text" id="first_name" name="first_name" required>
+            </div>
+
+            <div class="register-field">
+                <label for="last_name">Фамилия:</label>
+                <input type="text" id="last_name" name="last_name" required>
+            </div>
+
+            <div class="register-field">
+                <label for="phone_number">Номер телефона:</label>
+                <input type="text" id="phone_number" name="phone_number">
+            </div>
+
+            <div class="register-field">
+                <label for="birth_date">Дата рождения:</label>
+                <input type="date" id="birth_date" name="birth_date" required>
+            </div>
+
+            <button type="submit" class="button button-green">Зарегистрировать</button>
+            <button type="button" class="button button-red" onclick="window.location.href='/login'">Отмена</button>
+        </form>
+    </div>
+</body>
+</html>

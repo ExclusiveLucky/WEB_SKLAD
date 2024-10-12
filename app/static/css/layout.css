@@ -1,0 +1,50 @@
+/* Сетка категорий и продуктов */
+.categories, .products {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 30px;
+    width: 100%;
+    max-width: 900px;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.category, .product {
+    text-align: center;
+    margin: 20px;
+}
+
+/* Убираем рамки и подложки на картинках и ссылках при наведении */
+.category img, .product img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: none;
+}
+
+.category a, .product a {
+    display: block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #ecf0f1;
+    font-size: 18px;
+    outline: none;
+    border: none;
+}
+
+.category a:hover, .product a:hover, .category img:hover, .product img:hover {
+    box-shadow: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Убираем ненужные эффекты при наведении */
+.category:hover, .product:hover {
+    border: none;
+    box-shadow: none;
+    outline: none;
+    cursor: pointer;
+}

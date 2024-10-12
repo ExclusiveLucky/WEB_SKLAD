@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Товары</title>
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/layout.css"> <!-- для сетки продуктов -->
+    <link rel="stylesheet" href="/static/css/buttons.css"> <!-- для кнопок -->
+    <link rel="stylesheet" href="/static/css/quantity-controls.css"> <!-- для контроля количества -->
+    <link rel="stylesheet" href="/static/css/modals.css"> <!-- для модальных окон выбора количества -->
+    <link rel="stylesheet" href="/static/css/notifications.css"> <!-- для уведомления о продаже -->
+
+</head>
+<body>
+    <!-- <h1>{{ category.name }}</h1> -->
+    <!-- Сетка продуктов -->
+    <div class="products">
+        {% for product in products %}
+            <div class="product">
+                <img src="{{ product.image_url }}" alt="{{ product.name }}" onclick="openModal({{ product.id }})">
+                <!-- Сделаем название кликабельным, как и изображение -->
+                <a href="javascript:void(0);" onclick="openModal({{ product.id }})">{{ product.name }}</a>
+            </div>
+
+            <!-- Модальное окно для каждого продукта -->
+            <div id="modal-{{ product.id }}" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal({{ product.id }})">&times;</span>
+                    <h2>{{ product.name }}</h2>
+
+                    <!-- Кнопки для изменения количества -->
+                    <div class="quantity-controls">
+                        <button type="button" onclick="updateQuantity({{ product.id }}, -1)">-</button>
+                        <input type="text" id="quantity-{{ product.id }}" value="1" readonly>
+                        <button type="button" onclick="updateQuantity({{ product.id }}, 1)">+</button>
+                    </div>
+
+                    <!-- Кнопка "Продано" -->
+                    <button type="button" class="button button-green" onclick="submitForm({{ product.id }}, '{{ product.name }}')">Продано</button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Кнопка возврата -->
+    <div class="buttons">
+        <button type="button" class="button button-yellow" onclick="window.history.back()">Назад</button>
+    </div>
+
+    <script>
+        // Открытие модального окна с анимацией
+        function openModal(productId) {
+            var modal = document.getElementById('modal-' + productId);
+            modal.classList.add('show');
+        }
+
+        // Закрытие модального окна с анимацией
+        function closeModal(productId) {
+            var modal = document.getElementById('modal-' + productId);
+            modal.classList.remove('show');
+            
+            // Ждем завершения анимации перед удалением элемента
+            setTimeout(function() {
+                modal.style.display = 'none';
+            }, 500); // Время, соответствующее transition
+        }
+
+        // Функция для изменения количества товара
+        function updateQuantity(productId, change) {
+            var quantityField = document.getElementById("quantity-" + productId);
+            var currentQuantity = parseInt(quantityField.value);
+            var newQuantity = currentQuantity + change;
+            if (newQuantity < 1) newQuantity = 1;
+            quantityField.value = newQuantity;
+        }
+
+        // Функция для отправки данных о продаже
+        function submitForm(productId, productName) {
+            var quantityField = document.getElementById("quantity-" + productId).value;
+
+            fetch(`/sell/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ quantity: quantityField })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Показать всплывающее уведомление
+                showNotification(`Продано ${data.quantity_sold} шт. товара "${productName}"`);
+                closeModal(productId); // Закрыть окно после продажи
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+
+        // Функция для показа уведомления
+        function showNotification(message) {
+            var notification = document.createElement("div");
+            notification.classList.add("notification-success");
+            notification.innerText = message;
+
+            document.body.appendChild(notification);
+
+            // Показываем уведомление с задержкой
+            setTimeout(function() {
+                notification.classList.add('show');
+            }, 10);
+
+            // Скрываем уведомление через 2 секунды
+            setTimeout(function() {
+                notification.classList.remove('show');
+                setTimeout(function() {
+                    notification.remove();
+                }, 500); // Ждем окончания анимации исчезновения
+            }, 2000);
+        }
+    </script>
+
+</body>
+</html>

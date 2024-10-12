@@ -1,0 +1,4 @@
+/.venv
+/init_db.py
+/WEB_SKLAD.code-workspace
+/__pycache__

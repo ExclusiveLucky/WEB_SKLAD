@@ -1,0 +1,21 @@
+.notification-success {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #27ae60;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    opacity: 0;
+    z-index: 1000;
+    visibility: hidden;
+    transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+}
+
+.notification-success.show {
+    opacity: 0.7;
+    visibility: visible;
+}

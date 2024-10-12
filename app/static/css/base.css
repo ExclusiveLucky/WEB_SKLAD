@@ -1,0 +1,49 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #34495e;
+    color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+h1 {
+    text-align: center;
+    color: #ecf0f1;
+    margin: 20px 0;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    body {
+        font-size: 100%;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-size: 200%;
+    }
+
+    button {
+        font-size: 200%;
+        padding: 10px 20px;
+    }
+
+    img {
+        width: 100px;
+        height: 100px;
+    }
+
+    input {
+        font-size: 50%;
+        padding: 5px;
+    }
+    
+    table, th, td {
+        font-size: 100%;
+    }
+}
