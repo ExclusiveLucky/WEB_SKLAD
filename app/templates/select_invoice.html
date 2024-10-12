@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Выбор счета для добавления товара</title>
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/layout.css">
+    <link rel="stylesheet" href="/static/css/buttons.css">
+    <link rel="stylesheet" href="/static/css/tables.css">
+    <link rel="stylesheet" href="/static/css/notifications.css"> <!-- для уведомления о продаже -->
+</head>
+<body>
+    <h1>Выберите счет для добавления товара</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Номер счета</th>
+                <th>Создатель</th>
+                <th>Дата создания</th>
+                <th>Общая сумма</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in invoices %}
+            <tr onclick="addToInvoice({{ invoice.id }})">
+                <td>{{ invoice.id }}</td>
+                <td>{{ invoice.user.first_name }} {{ invoice.user.last_name }}</td>
+                <td>{{ invoice.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ invoice.total_amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        // Функция для показа уведомления
+        function showNotification(message) {
+            var notification = document.createElement("div");
+            notification.classList.add("notification-success");
+            notification.innerText = message;
+
+            document.body.appendChild(notification);
+
+            // Показываем уведомление с задержкой
+            setTimeout(function() {
+                notification.classList.add('show');
+            }, 10);
+
+            // Скрываем уведомление через 2 секунды
+            setTimeout(function() {
+                notification.classList.remove('show');
+                setTimeout(function() {
+                    notification.remove();
+                }, 500); // Ждем окончания анимации исчезновения
+            }, 2000);
+        }
+        function addToInvoice(invoiceId) {
+            var productId = {{ product_id }};
+            var quantity = {{ quantity }};
+            var categoryId = {{ category_id }};
+            
+            fetch(`/add_to_invoice/${invoiceId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ product_id: productId, quantity: quantity })
+            })
+            .then(response => {
+                if (response.ok) {
+                     // Сохраняем уведомление в localStorage
+                    localStorage.setItem('notification', 'Товар добавлен к счету.');
+                    window.location.href = `/category/${categoryId}`;
+
+                    // showNotification('Товар добавлен к счету.');
+                    // // Ждем 2 секунды перед редиректом
+                    // setTimeout(function() {
+                    //     window.location.href = "/";
+                    // }, 2000);
+                } else {
+                    console.error('Ошибка:', response);
+                }
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+    </script>
+
+    <!-- Кнопка возврата -->
+    <div class="buttons">
+        <button type="button" class="button button-yellow" onclick="window.history.back()">Назад</button>
+    </div>
+</body>
+</html>

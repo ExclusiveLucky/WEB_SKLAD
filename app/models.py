@@ -64,16 +64,30 @@ class Product(Base):
     image_url = Column(String)  
     # Обратная связь с таблицей Category
     category = relationship('Category', back_populates="products")
-    sales = relationship("Sale", back_populates="product")
+    invoiceitems = relationship("InvoiceItem", back_populates="product")
 
-class Sale(Base):
-    __tablename__ = "sales"
-
+class Invoice(Base):
+    __tablename__ = "invoices"
+    
     id = Column(Integer, primary_key=True, index=True)
-    product_id = Column(Integer, ForeignKey("products.id"))
-    username = Column(String, nullable=False)  # Логин пользователя
-    quantity = Column(Integer, nullable=False)
-    sale_time = Column(DateTime(timezone=True), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    created_at = Column(DateTime, default=datetime.utcnow)
+    total_amount = Column(Float, default=0)
+    items = relationship("InvoiceItem", back_populates="invoice")
+    user = relationship("User")
 
-    # Связь с продуктом
-    product = relationship("Product", back_populates="sales")
+    
+class InvoiceItem(Base):
+    __tablename__ = "invoice_items"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    invoice_id = Column(Integer, ForeignKey("invoices.id"))
+    product_id = Column(Integer, ForeignKey("products.id"))
+    quantity = Column(Integer, default=1)
+    
+    invoice = relationship("Invoice", back_populates="items")
+    product = relationship("Product", back_populates="invoiceitems")
+
+    @property
+    def price(self):
+        return self.product.price 

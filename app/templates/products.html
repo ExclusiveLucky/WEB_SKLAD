@@ -35,9 +35,11 @@
                         <input type="text" id="quantity-{{ product.id }}" value="1" readonly>
                         <button type="button" onclick="updateQuantity({{ product.id }}, 1)">+</button>
                     </div>
+                    <!-- Кнопка "Новый счет" -->
+                    <button type="button" class="button button-green" onclick="createNewInvoice({{ product.id }}, '{{ product.name }}')">Новый счет</button>
+                    <!-- Кнопка "Добавить к счету" -->
+                    <button type="button" class="button button-green" onclick="redirectToInvoices({{ product.id }}, '{{ product.name }}', '{{ category.id }}')">Добавить к счету</button>
 
-                    <!-- Кнопка "Продано" -->
-                    <button type="button" class="button button-green" onclick="submitForm({{ product.id }}, '{{ product.name }}')">Продано</button>
                 </div>
             </div>
         {% endfor %}
@@ -45,10 +47,22 @@
 
     <!-- Кнопка возврата -->
     <div class="buttons">
-        <button type="button" class="button button-yellow" onclick="window.history.back()">Назад</button>
+        <button type="button" class="button button-yellow" onclick="window.location.href='/'">Категории</button>
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var notification = localStorage.getItem('notification');
+            
+            if (notification) {
+                // Показываем уведомление
+                showNotification(notification);
+
+                // Удаляем уведомление из localStorage, чтобы оно не отображалось повторно
+                localStorage.removeItem('notification');
+            }
+        });
+
         // Открытие модального окна с анимацией
         function openModal(productId) {
             var modal = document.getElementById('modal-' + productId);
@@ -75,26 +89,6 @@
             quantityField.value = newQuantity;
         }
 
-        // Функция для отправки данных о продаже
-        function submitForm(productId, productName) {
-            var quantityField = document.getElementById("quantity-" + productId).value;
-
-            fetch(`/sell/${productId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ quantity: quantityField })
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Показать всплывающее уведомление
-                showNotification(`Продано ${data.quantity_sold} шт. товара "${productName}"`);
-                closeModal(productId); // Закрыть окно после продажи
-            })
-            .catch(error => console.error('Ошибка:', error));
-        }
-
         // Функция для показа уведомления
         function showNotification(message) {
             var notification = document.createElement("div");
@@ -115,6 +109,39 @@
                     notification.remove();
                 }, 500); // Ждем окончания анимации исчезновения
             }, 2000);
+        }
+
+        // Функция для создания нового счета и добавления в него товара
+        function createNewInvoice(productId, productName) {
+            var quantityField = document.getElementById("quantity-" + productId).value;
+
+            fetch('/create_invoice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    product_id: parseInt(productId),
+                    quantity: parseInt(quantityField)
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => { throw new Error(data.detail); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                showNotification(`Создан новый счет с "${productName}" ${quantityField} шт.`);
+                closeModal(productId);
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+        function redirectToInvoices(productId, productName, categoryId) {
+            var quantityField = document.getElementById("quantity-" + productId).value;
+
+            // Перенаправляем пользователя на новую страницу выбора счета для добавления товара
+            window.location.href = `/select_invoice/${productId}/${quantityField}/${categoryId}`;
         }
     </script>
 

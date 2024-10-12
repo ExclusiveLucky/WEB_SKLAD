@@ -27,16 +27,14 @@
 
     <!-- Кнопки "Задачи", "Продажи" и "Выйти" -->
     <div class="buttons">
+        <!-- Кнопка "Счета" -->
+        <button type="button" class="button button-green" onclick="window.location.href='/invoices'">Счета</button>
         {% if user == 'admin' %}
             <!-- Кнопка "Задачи" для админа -->
-            <button type="button" class="button button-green" onclick="window.location.href='/admin/tasks'">Задачи</button>
-            <!-- Кнопка "Продажи" для админа -->
-            <button type="button" class="button button-orange" onclick="window.location.href='/admin/sales'">Продажи</button>
+            <button type="button" class="button button-orange" onclick="window.location.href='/admin/tasks'">Задачи</button>
         {% else %}
             <!-- Кнопка "Задачи" для всех пользователей кроме админа -->
-            <button type="button" class="button button-green" onclick="window.location.href='/user/tasks'">Задачи</button>
-            <!-- Кнопка "Продажи" для всех пользователей кроме админа -->
-            <button type="button" class="button button-orange" onclick="window.location.href='/user/sales'">Продажи</button>
+            <button type="button" class="button button-orange" onclick="window.location.href='/user/tasks'">Задачи</button>
         {% endif %}
         <!-- Кнопка "Выйти" -->
         <button type="button" class="button button-red" onclick="window.location.href='/logout'">Выйти</button>

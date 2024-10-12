@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="/static/css/layout.css"> <!-- для общей структуры -->
     <link rel="stylesheet" href="/static/css/buttons.css"> <!-- для кнопок -->
     <link rel="stylesheet" href="/static/css/tables.css"> <!-- для отображения задач в виде таблицы -->
-
+    <link rel="stylesheet" href="/static/css/modals.css"> <!-- для модальных окон -->
+    <link rel="stylesheet" href="/static/css/notifications.css"> <!-- для уведомлений -->
 </head>
 <body>
     <h1>Задачи</h1>
@@ -16,7 +17,6 @@
     <!-- Список задач -->
     <div class="tasks">
         <p>Здесь будут отображаться задачи</p>
-        <!-- Для динамической отрисовки задач используем цикл -->
         {% for task in tasks %}
         <div class="task">
             <p>{{ task.task_description }}</p>
@@ -27,13 +27,91 @@
 
     <!-- Кнопки в нижней части экрана -->
     <div class="buttons">
+        {% if user == "admin" %}
+        <button type="button" class="button button-green" onclick="openModal()">Добавить задачу</button>
+        {% else %}
         <button type="button" class="button button-green" onclick="startShift()">Начать смену</button>
+        {% endif %}
         <button type="button" class="button button-yellow" onclick="window.history.back()">Назад</button>
     </div>
 
+    <!-- Модальное окно -->
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Добавить новую задачу</h2>
+            <form id="add-task-form">
+                <label for="task_description">Описание задачи:</label>
+                <input type="text" id="task_description" name="task_description" required>
+                
+                <label for="user_id">Выберите пользователя:</label>
+                <select id="user_id" name="user_id" required>
+                    {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                    {% endfor %}
+                </select>
+                
+                <button type="button" class="button button-blue" onclick="submitTask()">Добавить</button>
+            </form>
+        </div>
+    </div>
+
     <script>
+        function openModal() {
+            document.getElementById("task-modal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("task-modal").style.display = "none";
+        }
+
+        function showNotification(message) {
+            var notification = document.createElement("div");
+            notification.classList.add("notification-success");
+            notification.innerText = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(function() {
+                notification.classList.add('show');
+            }, 10);
+
+            setTimeout(function() {
+                notification.classList.remove('show');
+                setTimeout(function() {
+                    notification.remove();
+                }, 500);
+            }, 2000);
+        }
+
+        function submitTask() {
+            const taskDescription = document.getElementById("task_description").value;
+            const userId = document.getElementById("user_id").value;
+
+            fetch('/admin/add-task', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    task_description: taskDescription,
+                    user_id: userId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Задача успешно добавлена.')
+                    closeModal();
+                    location.reload();
+                } else {
+                    alert("Ошибка при добавлении задачи");
+                }
+            })
+            .catch(error => console.error("Ошибка:", error));
+        }
+
         function startShift() {
-            // Логика для начала смены
             fetch('/start-shift', {
                 method: 'POST',
                 headers: {
@@ -43,7 +121,6 @@
             .then(response => response.json())
             .then(data => {
                 alert('Смена начата!');
-                // Возможно обновление интерфейса или редирект
             })
             .catch(error => console.error('Ошибка:', error));
         }
