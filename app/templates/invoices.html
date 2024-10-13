@@ -40,18 +40,21 @@
             <span class="close" onclick="closeModal()">&times;</span>
             <h2>Информация по счету</h2>
             <p id="invoice-details"></p>
-            <button class="button" onclick="closeModal()">ОК</button>
         </div>
     </div>
 
     <script>
+        let currentInvoiceId = null;
+
         function showInvoiceDetails(invoiceId) {
+            currentInvoiceId = invoiceId;
             // Выполняем AJAX запрос для получения данных по счету
             fetch(`/invoice/${invoiceId}`)
                 .then(response => response.json())
                 .then(data => {
                     // Обновляем содержимое модального окна
                     let details = `
+                        ${data.status}
                         <strong>Номер счета:</strong> ${data.id}<br>
                         <strong>Создатель:</strong> ${data.user.first_name} ${data.user.last_name}<br>
                         <strong>Дата создания:</strong> ${data.created_at}<br>
@@ -59,10 +62,22 @@
                         <ul>
                             ${data.items.map(item => `<li>${item.product_name} - ${item.quantity} шт. x ${item.price} руб.</li>`).join('')}
                         </ul>
-                        <strong>Итоговая сумма:</strong> ${data.total_amount} руб.
+                        <strong>Итоговая сумма:</strong> ${data.total_amount} руб.<br>
                     `;
+                    
+                    // Добавляем кнопки закрытия только если счет не закрыт
+                    if (data.status === "open") {
+                        details += `
+                            <button class="button button-orange" onclick="closeInvoice(${data.id}, 'cash')">Закрыть наличными</button>
+                            <button class="button button-red" onclick="closeInvoice(${data.id}, 'card')">Закрыть по карте</button>
+                        `;
+                    } else {
+                        details += `
+                            <strong>Тип платежа:</strong> ${data.pay_type || 'Не указан'}<br>
+                        `;
+                    }
                     document.getElementById('invoice-details').innerHTML = details;
-    
+
                     // Отображаем модальное окно
                     var modal = document.getElementById('invoice-modal');
                     modal.classList.add('show');
@@ -75,10 +90,28 @@
             var modal = document.getElementById('invoice-modal');
             modal.classList.remove('show');
         }
+
+        // Закрытие счета
+        function closeInvoice(invoiceId, payType) {
+            fetch(`/invoice/${invoiceId}/close/${payType}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                window.location.reload();
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+
     </script>
 
     <!-- Кнопка возврата -->
     <div class="buttons">
+        <button type="button" class="button button-blue" onclick="window.location.href='/invoices/closed'">Закрытые счета</button>
         <button type="button" class="button button-yellow" onclick="window.location.href='/'">Категории</button>
     </div>
 </body>

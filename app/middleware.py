@@ -8,7 +8,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
         user = request.cookies.get("user")
         
         # Если пользователь не залогинен и не находится на странице логина
-        if not user and request.url.path not in ["/login", "/logout", "/register"]:
+        if not user and request.url.path not in ["/login", "/logout"]:
             return RedirectResponse(url="/login")
         
         # Продолжаем обработку запроса

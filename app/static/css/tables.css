@@ -1,28 +1,28 @@
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
+    width: 100%; /* Таблица занимает всю ширину контейнера */
+    border-collapse: collapse; /* Убирает промежутки между ячейками */
+    margin: 20px 0; /* Отступ сверху и снизу таблицы */
 }
 
 table, th, td {
-    border: 1px solid #ddd;
+    border: 1px solid #ddd; /* Устанавливает границу для таблицы и ячеек */
 }
 
 th, td {
-    padding: 12px;
-    text-align: left;
+    padding: 12px; /* Внутренние отступы в ячейках */
+    text-align: left; /* Выравнивание текста по левому краю */
 }
 
 th {
-    background-color: #2980b9;
-    color: white;
+    background-color: #2980b9; /* Фон для заголовков таблицы */
+    color: white; /* Белый цвет текста в заголовках */
 }
 
 td {
-    background-color: #34495e;
-    color: white;
+    background-color: #34495e; /* Фон для ячеек таблицы */
+    color: white; /* Белый цвет текста в ячейках */
 }
 
 tr:nth-child(even) {
-    background-color: #2c3e50;
+    background-color: #2c3e50; /* Фон для четных строк */
 }

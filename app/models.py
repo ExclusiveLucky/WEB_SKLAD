@@ -73,8 +73,15 @@ class Invoice(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column(DateTime, default=datetime.utcnow)
     total_amount = Column(Float, default=0)
+    status = Column(String, default="open")  # Статус счета (открыт/закрыт)
+    closed_at = Column(DateTime, nullable=True)  # Время закрытия счета
+    closed_by = Column(Integer, ForeignKey("users.id"), nullable=True)  # Кто закрыл счет
+    comment = Column(Text, nullable=True)  # Комментарий к закрытию
+    pay_type = Column(Text, nullable=True)  # Тип оплаты
+    
     items = relationship("InvoiceItem", back_populates="invoice")
-    user = relationship("User")
+    user = relationship("User", foreign_keys=[user_id])
+    closed_by_user = relationship("User", foreign_keys=[closed_by])
 
     
 class InvoiceItem(Base):

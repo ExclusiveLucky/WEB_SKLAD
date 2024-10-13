@@ -1,21 +1,21 @@
 .notification-success {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #27ae60;
-    color: white;
-    padding: 15px 20px;
-    border-radius: 5px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    font-size: 16px;
-    opacity: 0;
-    z-index: 1000;
-    visibility: hidden;
-    transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+    position: fixed; /* Закрепляет уведомление на экране */
+    top: 20px; /* Отступ сверху */
+    left: 50%; /* Размещение по горизонтали на 50% экрана */
+    transform: translateX(-50%); /* Центрирование уведомления */
+    background-color: #27ae60; /* Зелёный цвет для успешного уведомления */
+    color: white; /* Белый цвет текста */
+    padding: 15px 20px; /* Внутренние отступы для текста */
+    border-radius: 5px; /* Скругленные углы */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Тень для объёма */
+    font-size: 16px; /* Размер шрифта */
+    opacity: 0; /* Начальная прозрачность */
+    z-index: 1000; /* Приоритет отображения */
+    visibility: hidden; /* Скрыто по умолчанию */
+    transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out; /* Анимация для плавного появления */
 }
 
 .notification-success.show {
-    opacity: 0.7;
-    visibility: visible;
+    opacity: 0.7; /* Видимость при показе */
+    visibility: visible; /* Видимость элемента */
 }

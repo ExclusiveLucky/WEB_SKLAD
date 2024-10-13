@@ -29,14 +29,14 @@ def register_user(
         first_name=first_name,
         last_name=last_name,
         phone_number=phone_number,
-        birth_date=birth_date
+        birth_date = datetime.strptime(birth_date, "%Y-%m-%d").date() if birth_date else None
     )
     
     db.add(new_user)
     db.commit()
 
     # После успешной регистрации перенаправляем на страницу логина
-    return RedirectResponse(url="/login?message=Регистрация успешна", status_code=HTTP_303_SEE_OTHER)
+    return RedirectResponse(url="/admin/tasks", status_code=HTTP_303_SEE_OTHER)
 
 # Страница входа
 @router.get("/login")

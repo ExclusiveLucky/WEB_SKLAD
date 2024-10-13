@@ -1,8 +1,12 @@
 from .dependencies import *
 
 @router.get("/invoices")
-def view_invoices(request: Request, product_id: int = None, quantity: int = None, product_name: str = None, db: Session = Depends(get_db)):
-    invoices = db.query(Invoice).all()
+def view_invoices(request: Request, product_id: int = None, quantity: int = None, product_name: str = None, db: Session = Depends(get_db), user: str = Cookie(None)):
+    if user == "admin":
+        invoices = db.query(Invoice).filter(Invoice.status == "open").all()
+    else:
+        user_obj = db.query(User).filter(User.username == user).first()
+        invoices = db.query(Invoice).filter(Invoice.status == "open").filter(Invoice.user_id == user_obj.id).all()
 
     return templates.TemplateResponse("invoices.html", {
         "request": request,
@@ -12,11 +16,56 @@ def view_invoices(request: Request, product_id: int = None, quantity: int = None
         "product_name": product_name
     })
 
+@router.get("/invoices/closed")
+def get_closed_invoices(request: Request, db: Session = Depends(get_db), user: str = Cookie(None)):
+    if user == "admin":
+        invoices = db.query(Invoice).filter(Invoice.status == "closed").all()
+    else:
+        user_obj = db.query(User).filter(User.username == user).first()
+        invoices = db.query(Invoice).filter(Invoice.status == "closed").filter(Invoice.user_id == user_obj.id).all()
+
+    return templates.TemplateResponse("invoices.html", {"request": request,"invoices": invoices})
+
+# @router.post("/invoice/{invoice_id}/close")
+# def close_invoice(invoice_id: int, db: Session = Depends(get_db), user: str = Cookie(None), pay_type: str = Form(...)):
+#     invoice = db.query(Invoice).filter(Invoice.id == invoice_id).first()
+#     if not invoice:
+#         raise HTTPException(status_code=404, detail="Счет не найден")
+    
+#     # Обновляем данные счета
+#     invoice.status = "closed"
+#     invoice.closed_at = datetime.utcnow()
+#     invoice.closed_by = user  # Допустим, у вас есть аутентификация
+#     invoice.pay_type = pay_type
+    
+#     db.commit()
+
+#     return {"message": f"Счет закрыт ({pay_type})"}
+
+class CloseInvoiceData(BaseModel):
+    pay_type: str
+    
+@router.post("/invoice/{invoice_id}/close/{pay_type}")
+def close_invoice(invoice_id: int, pay_type: str, db: Session = Depends(get_db), user: str = Cookie(None)):
+    invoice = db.query(Invoice).filter(Invoice.id == invoice_id).first()
+    if not invoice:
+        raise HTTPException(status_code=404, detail="Счет не найден")
+    
+    user_obj = db.query(User).filter(User.username == user).first()
+    invoice.closed_at = datetime.utcnow()
+    invoice.closed_by = user_obj.id
+    invoice.status = "closed"
+    invoice.pay_type = pay_type
+
+    db.commit()
+    return {"message": f"Счет закрыт ({pay_type})"}
+
 
 @router.get("/select_invoice/{product_id}/{quantity}/{category_id}")
 def select_invoice(request: Request, product_id: int, quantity: int, category_id: int, db: Session = Depends(get_db), user: str = Cookie(None)):
     user_obj = db.query(User).filter(User.username == user).first()
-    invoices = db.query(Invoice).filter(Invoice.user_id == user_obj.id).all()
+    # invoices = db.query(Invoice).filter(Invoice.user_id == user_obj.id).all()
+    invoices = db.query(Invoice).filter(Invoice.status == "open").filter(Invoice.user_id == user_obj.id).all()
     return templates.TemplateResponse("select_invoice.html", {
         "request": request,  # Передаем request в контексте
         "invoices": invoices, 
@@ -90,5 +139,7 @@ def get_invoice_details(invoice_id: int, db: Session = Depends(get_db)):
             }
             for item in invoice.items
         ],
-        "total_amount": invoice.total_amount
+        "total_amount": invoice.total_amount,
+        "status": invoice.status,
+        "pay_type": invoice.pay_type
     }

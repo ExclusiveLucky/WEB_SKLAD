@@ -1,82 +1,87 @@
 /* Основные стили для всех кнопок */
 .button {
-    background-color: #2980b9;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    width: 100%;
-    max-width: 300px;
+    background-color: #2980b9; /* Синий цвет фона кнопки по умолчанию */
+    border: none; /* Убираем границы */
+    color: white; /* Белый текст на кнопке */
+    padding: 10px 20px; /* Внутренний отступ кнопки */
+    font-size: 16px; /* Размер шрифта текста кнопки */
+    cursor: pointer; /* Меняет курсор на указатель при наведении */
+    border-radius: 5px; /* Скругление углов кнопки */
+    width: 100%; /* Ширина кнопки на всю доступную область */
+    max-width: 300px; /* Максимальная ширина кнопки — 300px */
 }
 
 .button:hover {
-    background-color: #3498db;
+    background-color: #3498db; /* Более светлый синий цвет при наведении */
 }
 
 /* Специальные стили для цветовых схем кнопок */
 .button-orange {
-    background-color: #f39c12;
+    background-color: #f39c12; /* Оранжевый фон кнопки */
 }
 
 .button-orange:hover {
-    background-color: #e67e22;
+    background-color: #e67e22; /* Темно-оранжевый цвет при наведении */
 }
 
 .button-yellow {
-    background-color: #f1c40f;
+    background-color: #f1c40f; /* Желтый фон кнопки */
 }
 
 .button-yellow:hover {
-    background-color: #f39c12;
+    background-color: #f39c12; /* Оранжевый цвет при наведении */
 }
 
 .button-green {
-    background-color: #27ae60;
+    background-color: #27ae60; /* Зеленый фон кнопки */
 }
 
 .button-green:hover {
-    background-color: #2ecc71;
+    background-color: #2ecc71; /* Светло-зеленый цвет при наведении */
 }
 
 .button-red {
-    background-color: #e74c3c;
+    background-color: #e74c3c; /* Красный фон кнопки */
 }
 
 .button-red:hover {
-    background-color: #c0392b;
+    background-color: #c0392b; /* Темно-красный цвет при наведении */
+}
+.button-blue {
+    background-color: #3c64e7; /* Красный фон кнопки */
+}
+
+.button-blue:hover {
+    background-color: #2b5fc0; /* Темно-красный цвет при наведении */
 }
 
 /* Специфичные стили для кнопок */
-.register-button .cancel-button{
-    margin-top: 20px;
+.register-button .cancel-button {
+    margin-top: 20px; /* Отступ сверху для кнопки регистрации и отмены */
 }
-
 
 /* Ошибка */
 #error-message {
-    margin-top: 10px;
-    color: red;
+    margin-top: 10px; /* Отступ сверху для сообщения об ошибке */
+    color: red; /* Красный текст для ошибок */
 }
 
 /* Фиксируем кнопки внизу экрана */
 .buttons {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #34495e;
-    display: flex;
-    justify-content: center;
-    padding: 10px 0;
-    z-index: 1000;
+    position: fixed; /* Фиксирует кнопки внизу экрана */
+    bottom: 0; /* Располагает кнопки на нижней границе экрана */
+    left: 0; /* Привязывает к левому краю экрана */
+    width: 100%; /* Кнопки занимают всю ширину экрана */
+    display: flex; /* Гибкий контейнер для кнопок */
+    justify-content: center; /* Центрирует кнопки по горизонтали */
+    padding: 10px 0; /* Внутренний отступ сверху и снизу */
+    z-index: 1000; /* Повышает слой отображения кнопок над другими элементами */
 }
 
 /* Кнопки управления количеством */
 .quantity-controls button {
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-    margin: 0 10px;
+    width: 40px; /* Ширина кнопки управления количеством */
+    height: 40px; /* Высота кнопки управления количеством */
+    font-size: 18px; /* Размер шрифта внутри кнопки */
+    margin: 0 10px; /* Отступ по горизонтали между кнопками */
 }

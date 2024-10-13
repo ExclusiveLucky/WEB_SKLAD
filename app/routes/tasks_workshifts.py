@@ -1,19 +1,64 @@
 from .dependencies import *
 
+
+@router.get("/task/{task_id}")
+def get_task(task_id: int, db: Session = Depends(get_db)):
+    # Получаем задачу по ID
+    task = db.query(Task).filter(Task.id == task_id).first()
+    
+    if not task:
+        raise HTTPException(status_code=404, detail="Задача не найдена")
+    
+    # Возвращаем данные задачи
+    return {
+        "id": task.id,
+        "task_description": task.task_description,
+        "is_completed": task.is_completed,
+        "created_at": task.created_at.strftime('%Y-%m-%d %H:%M:%S')
+    }
+
+@router.post("/task/{task_id}/complete")
+def complete_task(task_id: int, db: Session = Depends(get_db)):
+    task = db.query(Task).filter(Task.id == task_id).first()
+    if not task:
+        raise HTTPException(status_code=404, detail="Задача не найдена")
+    
+    task.is_completed = True
+    task.completed_at = datetime.utcnow()
+    db.commit()
+    
+    return {"message": "Задача выполнена"}
+
+
 @router.get("/admin/tasks")
 async def get_admin_tasks(request: Request, db: Session = Depends(get_db), user: str = Depends(get_user_from_cookie)):
     if user != "admin":
         return {"error": "Access denied"}
 
     tasks = db.query(Task).all()  # Все задачи
-    return templates.TemplateResponse("tasks.html", {"request": request, "tasks": tasks, "user": user, "users": db.query(User).all()})
+    return templates.TemplateResponse(
+        "tasks.html", 
+        {
+            "request": request, 
+            "tasks": tasks,
+            "user": user, 
+            "users": db.query(User).all()
+            }
+        )
 
 # Эндпоинт для отображения задач для пользователя
 @router.get("/user/tasks")
 async def get_user_tasks(request: Request, db: Session = Depends(get_db), user: str = Depends(get_user_from_cookie)):
     user = db.query(User).filter(User.username == user).first()
     tasks = db.query(Task).filter(Task.user_id == user.id).all()  # Только задачи текущего пользователя
-    return templates.TemplateResponse("tasks.html", {"request": request, "tasks": tasks, "user": user})
+    return templates.TemplateResponse(
+        "tasks.html", 
+        {
+            "request": request, 
+            "tasks": tasks, 
+            "user": user
+            }
+        )
 
 class TaskCreate(BaseModel):
     task_description: str

@@ -5,51 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Задачи</title>
     <link rel="stylesheet" href="/static/css/base.css">
-    <link rel="stylesheet" href="/static/css/layout.css"> <!-- для общей структуры -->
-    <link rel="stylesheet" href="/static/css/buttons.css"> <!-- для кнопок -->
-    <link rel="stylesheet" href="/static/css/tables.css"> <!-- для отображения задач в виде таблицы -->
+    <link rel="stylesheet" href="/static/css/layout.css">
+    <link rel="stylesheet" href="/static/css/buttons.css">
+    <link rel="stylesheet" href="/static/css/tables.css">
     <link rel="stylesheet" href="/static/css/modals.css"> <!-- для модальных окон -->
     <link rel="stylesheet" href="/static/css/notifications.css"> <!-- для уведомлений -->
 </head>
 <body>
     <h1>Задачи</h1>
 
-    <!-- Список задач -->
-    <div class="tasks">
-        <p>Здесь будут отображаться задачи</p>
-        {% for task in tasks %}
-        <div class="task">
-            <p>{{ task.task_description }}</p>
-            <p>Статус: {{ "Выполнено" if task.is_completed else "Не выполнено" }}</p>
-        </div>
-        {% endfor %}
-    </div>
+    <!-- Таблица задач -->
+    <table>
+        <thead>
+            <tr>
+                <th>Номер</th>
+                <th>Время создания</th>
+                <th>Описание</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr onclick="showTaskDetails({{ task.id }})">
+                <td>{{ loop.index }}</td>
+                <td>{{ task.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ task.task_description }}</td>
+                <td>{{ "Выполнено" if task.is_completed else "Не выполнено" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
     <!-- Кнопки в нижней части экрана -->
     <div class="buttons">
         {% if user == "admin" %}
-        <button type="button" class="button button-green" onclick="openModal()">Добавить задачу</button>
+        <button type="button" class="button button-blue" onclick="window.location.href='/register'">Регистрация</button>
+        <button type="button" class="button button-green" onclick="openAddTaskModal()">Добавить задачу</button>
         {% else %}
         <button type="button" class="button button-green" onclick="startShift()">Начать смену</button>
         {% endif %}
-        <button type="button" class="button button-yellow" onclick="window.history.back()">Назад</button>
+        <button type="button" class="button button-yellow" onclick="window.location.href='/'">Категории</button>
     </div>
 
-    <!-- Модальное окно -->
-    <div id="task-modal" class="modal">
+    <!-- Модальное окно для просмотра задачи -->
+    <div id="view-task-modal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
+            <span class="close" onclick="closeTaskModal()">&times;</span>
+            <h2>Информация по задаче</h2>
+            <p id="task-details"></p>
+        </div>
+    </div>
+
+    <!-- Модальное окно для добавления задачи -->
+    <div id="add-task-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddTaskModal()">&times;</span>
             <h2>Добавить новую задачу</h2>
             <form id="add-task-form">
-                <label for="task_description">Описание задачи:</label>
-                <input type="text" id="task_description" name="task_description" required>
-                
-                <label for="user_id">Выберите пользователя:</label>
-                <select id="user_id" name="user_id" required>
-                    {% for user in users %}
-                    <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
-                    {% endfor %}
-                </select>
+                <div>
+                    <textarea id="task_description" name="task_description" rows="8" cols="50" required></textarea>
+                </div>
+                <div>
+                    <label for="user_id">Выберите пользователя:</label>
+                    <select id="user_id" name="user_id" required>
+                        {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 
                 <button type="button" class="button button-blue" onclick="submitTask()">Добавить</button>
             </form>
@@ -57,12 +80,44 @@
     </div>
 
     <script>
-        function openModal() {
-            document.getElementById("task-modal").style.display = "block";
+        // Открытие модального окна задачи
+        function showTaskDetails(taskId) {
+            fetch(`/task/${taskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    let details = `
+                        <strong>Номер задачи:</strong> ${data.id}<br>
+                        <strong>Описание:</strong> ${data.task_description}<br>
+                        <strong>Статус:</strong> ${data.is_completed ? "Выполнено" : "Не выполнено"}<br>
+                        <strong>Время создания:</strong> ${data.created_at}<br>
+                    `;
+                    if (!data.is_completed) {
+                        details += `
+                            <button class="button button-green" onclick="completeTask(${taskId})">Выполнено.</button>
+                        `;
+                    }
+                    
+                    document.getElementById('task-details').innerHTML = details;
+
+                    // Показать модальное окно задачи
+                    document.getElementById('view-task-modal').style.display = 'block';
+                })
+                .catch(error => console.error('Ошибка:', error));
         }
 
-        function closeModal() {
-            document.getElementById("task-modal").style.display = "none";
+        // Закрытие модального окна задачи
+        function closeTaskModal() {
+            document.getElementById('view-task-modal').style.display = 'none';
+        }
+
+        // Открытие модального окна для добавления задачи
+        function openAddTaskModal() {
+            document.getElementById('add-task-modal').style.display = 'block';
+        }
+
+        // Закрытие модального окна для добавления задачи
+        function closeAddTaskModal() {
+            document.getElementById('add-task-modal').style.display = 'none';
         }
 
         function showNotification(message) {
@@ -102,7 +157,7 @@
             .then(data => {
                 if (data.success) {
                     showNotification('Задача успешно добавлена.')
-                    closeModal();
+                    closeAddTaskModal();
                     location.reload();
                 } else {
                     alert("Ошибка при добавлении задачи");
@@ -111,6 +166,21 @@
             .catch(error => console.error("Ошибка:", error));
         }
 
+        function completeTask(taskId) {
+            fetch(`/task/${taskId}/complete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                showNotification(data.message);
+                location.reload(); // Обновление страницы
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+                
         function startShift() {
             fetch('/start-shift', {
                 method: 'POST',

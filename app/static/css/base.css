@@ -1,49 +1,49 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #34495e;
-    color: white;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    max-width: 100vw;
-    overflow-x: hidden;
+    font-family: Arial, sans-serif; /* Используем шрифт Arial, запасной — sans-serif */
+    background-color: #34495e; /* Цвет фона всего тела страницы */
+    color: white; /* Основной цвет текста */
+    margin: 0; /* Убираем внешние отступы */
+    padding: 0; /* Убираем внутренние отступы */
+    display: flex; /* Используем флексбокс для раскладки элементов */
+    flex-direction: column; /* Располагаем элементы вертикально */
+    align-items: center; /* Центрируем элементы по горизонтали */
+    min-height: 100vh; /* Минимальная высота страницы — 100% высоты окна */
+    max-width: 100vw; /* Максимальная ширина — 100% окна, чтобы не было прокрутки по горизонтали */
+    overflow-x: hidden; /* Убираем горизонтальную прокрутку */
 }
 
 h1 {
-    text-align: center;
-    color: #ecf0f1;
-    margin: 20px 0;
+    text-align: center; /* Центрируем заголовок */
+    color: #ecf0f1; /* Светло-серый цвет заголовка */
+    margin: 20px 0; /* Отступ сверху и снизу на 20px */
 }
 
 /* Адаптивность */
-@media (max-width: 600px) {
+@media (max-width: 600px) { /* Правила применяются, если ширина экрана меньше 600px */
     body {
-        font-size: 100%;
+        font-size: 100%; /* Размер шрифта в теле страницы равен 100% от стандартного */
     }
 
     h1, h2, h3, h4, h5, h6 {
-        font-size: 200%;
+        font-size: 200%; /* Увеличиваем размер шрифтов заголовков в 2 раза */
     }
 
     button {
-        font-size: 200%;
-        padding: 10px 20px;
+        font-size: 200%; /* Увеличиваем шрифт кнопок в 2 раза */
+        padding: 10px 20px; /* Внутренние отступы кнопок остаются прежними */
     }
 
     img {
-        width: 100px;
-        height: 100px;
+        width: 100px; /* Ширина изображений — 100px */
+        height: 100px; /* Высота изображений — 100px */
     }
 
     input {
-        font-size: 50%;
-        padding: 5px;
+        font-size: 50%; /* Размер шрифта в полях ввода уменьшаем до 50% */
+        padding: 5px; /* Внутренние отступы полей ввода уменьшаем до 5px */
     }
     
     table, th, td {
-        font-size: 100%;
+        font-size: 100%; /* Размер шрифта в таблицах — 100% от стандартного */
     }
 }

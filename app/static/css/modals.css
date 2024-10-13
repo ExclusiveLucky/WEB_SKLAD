@@ -1,74 +1,70 @@
 .modal {
-    display: none;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* затемнение фона */
-    /* opacity: 0; */
-    /* visibility: hidden; */
-    /* transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out; */
+    display: none; /* Модальное окно скрыто по умолчанию */
+    justify-content: center; /* Центровка по горизонтали */
+    align-items: center; /* Центровка по вертикали */
+    position: fixed; /* Фиксированное положение на экране */
+    z-index: 1000; /* Слой отображения */
+    left: 0; /* Левый край экрана */
+    top: 0; /* Верхний край экрана */
+    width: 100%; /* Ширина на весь экран */
+    height: 100%; /* Высота на весь экран */
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный затемнённый фон */
 }
 
 .modal.show {
-    opacity: 1;
-    display: block;
-    visibility: visible;
+    opacity: 1; /* Прозрачность модального окна */
+    display: block; /* Отображаем модальное окно */
+    visibility: visible; /* Видимость окна */
 }
 
-
 .modal-content {
-    background-color: #2c3e50; /* Темный фон для модального окна */
-    margin: auto;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 500px; /* Увеличен для лучшей читабельности */
-    text-align: left; /* Текст выровнен по левому краю */
-    color: white;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    background-color: #2c3e50; /* Тёмный фон для содержимого модального окна */
+    margin: auto; /* Центровка содержимого */
+    padding: 20px; /* Внутренний отступ */
+    border-radius: 10px; /* Скругление углов */
+    max-width: 500px; /* Максимальная ширина */
+    text-align: left; /* Выравнивание текста по левому краю */
+    color: white; /* Цвет текста */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4); /* Тень для объема */
 }
 
 .quantity-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 15px 0;
+    display: flex; /* Используем Flexbox для выравнивания */
+    align-items: center; /* Вертикальное выравнивание по центру */
+    justify-content: center; /* Горизонтальное выравнивание по центру */
+    margin: 15px 0; /* Отступы сверху и снизу */
 }
 
 .quantity-controls input {
-    text-align: center;
-    width: 50px;
-    height: 40px;
-    font-size: 18px;
-    border: none;
-    border-radius: 5px;
+    text-align: center; /* Выравнивание текста по центру */
+    width: 50px; /* Ширина поля ввода */
+    height: 40px; /* Высота поля ввода */
+    font-size: 18px; /* Размер шрифта */
+    border: none; /* Без рамок */
+    border-radius: 5px; /* Скругленные углы */
 }
 
 .close {
-    color: white;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
+    color: white; /* Цвет крестика закрытия */
+    float: right; /* Положение крестика справа */
+    font-size: 28px; /* Размер шрифта */
+    font-weight: bold; /* Жирный шрифт */
+    cursor: pointer; /* Курсор-указатель при наведении */
 }
 
 .close:hover,
 .close:focus {
-    color: #f1c40f; /* Желтый при наведении */
+    color: #f1c40f; /* Изменение цвета на жёлтый при наведении */
 }
 
 button {
-    background-color: #27ae60; /* Зеленый цвет кнопки ОК */
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
+    background-color: #27ae60; /* Основной цвет кнопки */
+    color: white; /* Цвет текста на кнопке */
+    padding: 10px 20px; /* Внутренние отступы кнопки */
+    border: none; /* Без рамки */
+    border-radius: 5px; /* Скругленные углы кнопки */
+    cursor: pointer; /* Курсор-указатель при наведении */
+    margin-top: 20px; /* Отступ сверху */
 }
 
 button:hover {
