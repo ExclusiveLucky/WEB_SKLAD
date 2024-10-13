@@ -66,13 +66,16 @@
                             ${data.items.map(item => `<li>${item.product_name} - ${item.quantity} шт. x ${item.price} руб.</li>`).join('')}
                         </ul>
                         <strong>Итоговая сумма:</strong> ${data.total_amount} руб.<br>
+                        <br>
                     `;
                     
                     // Добавляем кнопки закрытия только если счет не закрыт
                     if (data.status === "open") {
                         details += `
-                            <button class="button button-orange" onclick="closeInvoice(${data.id}, 'cash')">Закрыть наличными</button>
-                            <button class="button button-red" onclick="closeInvoice(${data.id}, 'card')">Закрыть по карте</button>
+                            <div class="button-container" style="display: flex; gap: 10px;">
+                                <button class="button button-orange" onclick="closeInvoice(${data.id}, 'cash')">Наличные</button>
+                                <button class="button button-red" onclick="closeInvoice(${data.id}, 'card')">Карта</button>
+                            </div>
                         `;
                     } else {
                         details += `

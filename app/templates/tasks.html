@@ -91,10 +91,15 @@
                         <strong>Описание:</strong> ${data.task_description}<br>
                         <strong>Статус:</strong> ${data.is_completed ? "Выполнено" : "Не выполнено"}<br>
                         <strong>Время создания:</strong> ${data.created_at}<br>
+                        <br>
                     `;
                     if (!data.is_completed) {
                         details += `
-                            <button class="button button-green" onclick="completeTask(${taskId})">Выполнено.</button>
+                            <div class="button-container" style="display: flex; gap: 10px;">
+                                <button class="button button-green" onclick="completeTask(${taskId})">Выполнено.</button>
+                                <button class="button button-orange" onclick="window.location.href='/user/tasks'">Позже.</button>
+                            </div>
+                            
                         `;
                     }
                     

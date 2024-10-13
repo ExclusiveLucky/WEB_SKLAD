@@ -58,16 +58,16 @@
     color: #f1c40f; /* Изменение цвета на жёлтый при наведении */
 }
 
-button {
-    background-color: #27ae60; /* Основной цвет кнопки */
-    color: white; /* Цвет текста на кнопке */
-    padding: 10px 20px; /* Внутренние отступы кнопки */
-    border: none; /* Без рамки */
-    border-radius: 5px; /* Скругленные углы кнопки */
-    cursor: pointer; /* Курсор-указатель при наведении */
-    margin-top: 20px; /* Отступ сверху */
-}
-
-button:hover {
-    background-color: #2ecc71; /* Светло-зеленый при наведении */
-}
+/* button {
+/*     background-color: #2B9E7D; /* Основной цвет кнопки */
+/*     color: white; /* Цвет текста на кнопке */
+/*     padding: 10px 20px; /* Внутренние отступы кнопки */
+/*     border: none; /* Без рамки */
+/*     border-radius: 5px; /* Скругленные углы кнопки */
+/*     cursor: pointer; /* Курсор-указатель при наведении */
+/*     margin-top: 20px; /* Отступ сверху */
+/* }
+/* 
+/* button:hover {
+/*     background-color: #3f9e83; /* Светло-зеленый при наведении */
+/* }

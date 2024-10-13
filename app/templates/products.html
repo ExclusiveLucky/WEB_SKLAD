@@ -35,11 +35,11 @@
                         <input type="text" id="quantity-{{ product.id }}" value="1" readonly>
                         <button type="button" onclick="updateQuantity({{ product.id }}, 1)">+</button>
                     </div>
-                    <!-- Кнопка "Новый счет" -->
-                    <button type="button" class="button button-green" onclick="createNewInvoice({{ product.id }}, '{{ product.name }}')">Новый счет</button>
-                    <!-- Кнопка "Добавить к счету" -->
-                    <button type="button" class="button button-green" onclick="redirectToInvoices({{ product.id }}, '{{ product.name }}', '{{ category.id }}')">Добавить к счету</button>
 
+                    <div class="button-container" style="display: flex; gap: 10px;">
+                        <button type="button" class="button button-green" onclick="createNewInvoice({{ product.id }}, '{{ product.name }}')">Новый счет</button>
+                        <button type="button" class="button button-green" onclick="redirectToInvoices({{ product.id }}, '{{ product.name }}', '{{ category.id }}')">Добавить к счету</button>
+                    </div>
                 </div>
             </div>
         {% endfor %}
