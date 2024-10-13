@@ -1,14 +1,15 @@
 .modal {
-    display: none; /* Модальное окно скрыто по умолчанию */
-    justify-content: center; /* Центровка по горизонтали */
-    align-items: center; /* Центровка по вертикали */
-    position: fixed; /* Фиксированное положение на экране */
-    z-index: 1000; /* Слой отображения */
-    left: 0; /* Левый край экрана */
-    top: 0; /* Верхний край экрана */
-    width: 100%; /* Ширина на весь экран */
-    height: 100%; /* Высота на весь экран */
-    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный затемнённый фон */
+    display: none;
+    justify-content: center;
+    align-items: flex-end; /* Выравниваем по нижнему краю */
+    position: fixed;
+    z-index: 1500;
+    left: 0;
+    bottom: 0; /* Фиксируем у нижней части экрана */
+    width: 100%;
+    height: auto; /* Высота окна настраивается автоматически */
+    background-color: rgba(0, 0, 0, 0.0);
+    padding-bottom: 20px; /* Отступ от нижнего края экрана */
 }
 
 .modal.show {

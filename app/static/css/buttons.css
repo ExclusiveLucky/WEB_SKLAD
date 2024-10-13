@@ -2,13 +2,15 @@
 .button {
     background-color: #2980b9; /* Синий цвет фона кнопки по умолчанию */
     border: none; /* Убираем границы */
-    color: white; /* Белый текст на кнопке */
+    color:   #FFE4CF; /* Белый текст на кнопке */
     padding: 10px 20px; /* Внутренний отступ кнопки */
-    font-size: 16px; /* Размер шрифта текста кнопки */
+    font-size: 20px; /* Размер шрифта текста кнопки */
+    font-weight: bold; /* Делаем шрифт жирным */
     cursor: pointer; /* Меняет курсор на указатель при наведении */
     border-radius: 5px; /* Скругление углов кнопки */
     width: 100%; /* Ширина кнопки на всю доступную область */
     max-width: 300px; /* Максимальная ширина кнопки — 300px */
+    margin: 0 10px;
 }
 
 .button:hover {
@@ -17,42 +19,42 @@
 
 /* Специальные стили для цветовых схем кнопок */
 .button-orange {
-    background-color: #f39c12; /* Оранжевый фон кнопки */
+    background-color: #ff9244; /* Оранжевый фон кнопки */
 }
 
 .button-orange:hover {
-    background-color: #e67e22; /* Темно-оранжевый цвет при наведении */
+    background-color: #ffa260; /* Темно-оранжевый цвет при наведении */
 }
 
 .button-yellow {
-    background-color: #f1c40f; /* Желтый фон кнопки */
+    background-color: #FFD110; /* Желтый фон кнопки */
 }
 
 .button-yellow:hover {
-    background-color: #f39c12; /* Оранжевый цвет при наведении */
+    background-color: #ffd737; /* Оранжевый цвет при наведении */
 }
 
 .button-green {
-    background-color: #27ae60; /* Зеленый фон кнопки */
+    background-color: #2B9E7D; /* Зеленый фон кнопки */
 }
 
 .button-green:hover {
-    background-color: #2ecc71; /* Светло-зеленый цвет при наведении */
+    background-color: #3f9e83; /* Светло-зеленый цвет при наведении */
 }
 
 .button-red {
-    background-color: #e74c3c; /* Красный фон кнопки */
+    background-color: #E34F66; /* Красный фон кнопки */
 }
 
 .button-red:hover {
-    background-color: #c0392b; /* Темно-красный цвет при наведении */
+    background-color: #e06b7d; /* Темно-красный цвет при наведении */
 }
 .button-blue {
-    background-color: #3c64e7; /* Красный фон кнопки */
+    background-color: #228EC4; /* Красный фон кнопки */
 }
 
 .button-blue:hover {
-    background-color: #2b5fc0; /* Темно-красный цвет при наведении */
+    background-color: #4098c4; /* Темно-красный цвет при наведении */
 }
 
 /* Специфичные стили для кнопок */

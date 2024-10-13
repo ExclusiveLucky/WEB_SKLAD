@@ -9,7 +9,7 @@ from starlette.templating import Jinja2Templates
 from ..database import get_db
 from pytz import timezone
 from datetime import datetime, date
-from ..models import Category, Product, User, Task, WorkShift, Invoice, InvoiceItem
+from ..models import Category, Product, User, Task, WorkShift, Invoice, InvoiceItem, WeeklyTask
 from pydantic import BaseModel
 
 router = APIRouter()

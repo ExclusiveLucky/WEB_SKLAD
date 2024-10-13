@@ -11,8 +11,6 @@
     <link rel="stylesheet" href="/static/css/tables.css">
 </head>
 <body>
-    <h1>Все счета</h1>
-
     <table>
         <thead>
             <tr>
@@ -33,6 +31,12 @@
             {% endfor %}
         </tbody>
     </table>
+    <!-- Кнопка возврата -->
+    <div class="buttons">
+        <!-- <button type="button" class="button button-blue" onclick="window.location.href=button_href">{{ bunnton_text }}</button> -->
+        <button type="button" class="button button-blue" onclick="window.location.href='{{ button_href }}'">{{ button_text }}</button>
+        <button type="button" class="button button-yellow" onclick="window.location.href='/'">Категории</button>
+    </div>
 
     <!-- Модальное окно для счетов -->
     <div id="invoice-modal" class="modal">
@@ -54,7 +58,6 @@
                 .then(data => {
                     // Обновляем содержимое модального окна
                     let details = `
-                        ${data.status}
                         <strong>Номер счета:</strong> ${data.id}<br>
                         <strong>Создатель:</strong> ${data.user.first_name} ${data.user.last_name}<br>
                         <strong>Дата создания:</strong> ${data.created_at}<br>
@@ -109,10 +112,6 @@
 
     </script>
 
-    <!-- Кнопка возврата -->
-    <div class="buttons">
-        <button type="button" class="button button-blue" onclick="window.location.href='/invoices/closed'">Закрытые счета</button>
-        <button type="button" class="button button-yellow" onclick="window.location.href='/'">Категории</button>
-    </div>
+
 </body>
 </html>

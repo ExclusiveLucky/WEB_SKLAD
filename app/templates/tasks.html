@@ -12,9 +12,6 @@
     <link rel="stylesheet" href="/static/css/notifications.css"> <!-- для уведомлений -->
 </head>
 <body>
-    <h1>Задачи</h1>
-
-    <!-- Таблица задач -->
     <table>
         <thead>
             <tr>
@@ -42,7 +39,11 @@
         <button type="button" class="button button-blue" onclick="window.location.href='/register'">Регистрация</button>
         <button type="button" class="button button-green" onclick="openAddTaskModal()">Добавить задачу</button>
         {% else %}
-        <button type="button" class="button button-green" onclick="startShift()">Начать смену</button>
+            {% if user.is_working == 0 %}
+            <button type="button" class="button button-green" onclick="startShift()">Начать смену</button>
+            {% else %}
+            <button type="button" class="button button-red" onclick="endShift()">Завершить смену</button>
+            {% endif %}
         {% endif %}
         <button type="button" class="button button-yellow" onclick="window.location.href='/'">Категории</button>
     </div>
@@ -190,7 +191,21 @@
             })
             .then(response => response.json())
             .then(data => {
-                alert('Смена начата!');
+                location.reload();
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+
+        function endShift() {
+            fetch('/end-shift', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                location.reload();
             })
             .catch(error => console.error('Ошибка:', error));
         }

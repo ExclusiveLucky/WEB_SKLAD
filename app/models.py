@@ -40,8 +40,18 @@ class Task(Base):
     is_completed = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     completed_at = Column(DateTime, nullable=True)
+    level = Column(Integer, nullable=False)  # Уровень задачи
+    result = Column(String, nullable=False)  # Уровень задачи
 
     user = relationship("User", back_populates="tasks")
+
+class WeeklyTask(Base):
+    __tablename__ = "weekly_tasks"
+    
+    id = Column(Integer, primary_key=True, index=True)  # ID задачи
+    day = Column(Integer, nullable=False)  # Номер дня недели (1-7)
+    description = Column(String, nullable=False)  # Описание задачи
+    level = Column(Integer, nullable=False)  # Уровень задачи
 
 class Category(Base):
     __tablename__ = 'categories'

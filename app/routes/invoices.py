@@ -13,7 +13,10 @@ def view_invoices(request: Request, product_id: int = None, quantity: int = None
         "invoices": invoices,
         "product_id": product_id,
         "quantity": quantity,
-        "product_name": product_name
+        "product_name": product_name,
+        "label":"Открытые счета",
+        "button_text":"Закрытые счета",
+        "button_href":"/invoices/closed"
     })
 
 @router.get("/invoices/closed")
@@ -24,7 +27,12 @@ def get_closed_invoices(request: Request, db: Session = Depends(get_db), user: s
         user_obj = db.query(User).filter(User.username == user).first()
         invoices = db.query(Invoice).filter(Invoice.status == "closed").filter(Invoice.user_id == user_obj.id).all()
 
-    return templates.TemplateResponse("invoices.html", {"request": request,"invoices": invoices})
+    return templates.TemplateResponse("invoices.html", 
+                                      {"request": request,
+                                       "invoices": invoices,
+                                       "label":"Закрытые счета",
+                                       "button_text":"Открытые счета",
+                                       "button_href":"/invoices"})
 
 # @router.post("/invoice/{invoice_id}/close")
 # def close_invoice(invoice_id: int, db: Session = Depends(get_db), user: str = Cookie(None), pay_type: str = Form(...)):
