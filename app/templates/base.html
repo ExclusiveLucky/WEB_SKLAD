@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% block title %}Мое приложение{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/layout.css">
+    <link rel="stylesheet" href="/static/css/buttons.css">
+    <link rel="stylesheet" href="/static/css/modals.css">
+    <link rel="stylesheet" href="/static/css/tables.css">
+    <link rel="stylesheet" href="/static/css/base.css">
+</head>
+<body>
+    <!-- Верхний модуль с ником и статусом -->
+    <header class="header">
+        <div class="user-info">
+            <span class="user-info">{{ user.first_name }} {{ user.last_name }}</span>
+        </div>
+        <div class="user-time">
+            <span class="user-time">00:00</span>
+        </div>
+    
+        <!-- Контейнер для иконки статуса справа -->
+        <div class="status-button">
+            {% if user.is_working %}
+                <button class="action-button end-button" onclick="endShift()">Закрыть смену</button>
+            {% else %}
+                <button class="action-button start-button" onclick="startShift()">Открыть смену</button>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Основной контент страницы -->
+    {% block content %}{% endblock %}
+
+    <!-- Центрированные кнопки -->
+    {% block buttons %}{% endblock %}
+    
+    <!-- Нижняя навигация -->
+    <footer class="navigation">
+        <div class="nav-item" onclick="window.location.href='/stuff/invoices'">
+            <img src="https://img.icons8.com/cotton/100/receipt-and-change.png" alt="Счета">
+            <span>Счета</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='/stuff/tasks'">
+            <img src="https://img.icons8.com/cotton/100/checklist--v1.png" alt="Задачи">
+            <span>Задачи</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='/stuff/menu'">
+            <img src="https://img.icons8.com/cotton/100/street-food.png" alt="Меню">
+            <span>Меню</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='/stuff/settings'">
+            <img src="https://img.icons8.com/cotton/100/wrench--v2.png" alt="Настройки">
+            <span>Настройки</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='/stuff/profile'">
+            <img src="https://img.icons8.com/cotton/100/administrator-male.png" alt="Профиль">
+            <span>Профиль</span>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+    <script>
+        function startShift() {
+            fetch('/stuff/start-shift', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                location.reload();
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+
+        function endShift() {
+            fetch('/stuff/end-shift', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                location.reload();
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+    </script>
+</body>
+</html>

@@ -46,7 +46,7 @@ body {
 /* Основной контент */
 .content {
     flex: 1;
-    padding: 10px;
+    padding: 0px;
     background-color: #f2cc8f; /* Светлый желтоватый фон для контента */
     border-radius: 8px;
     margin: 15px;
@@ -179,7 +179,7 @@ body {
 
     .content {
         margin: 10px;
-        padding: 5px;
+        padding: 0px;
     }
 
     .action-button {
@@ -199,7 +199,7 @@ body {
 
     /* Сетка иконок для категорий и продуктов на мобильных устройствах */
     .categories, .products {
-        grid-template-columns: repeat(3, 1fr); /* Две колонки вместо трёх */
+        grid-template-columns: repeat(3, 1fr); /* Две колонки вместо трех */
         gap: 8px; /* Уменьшенный отступ между элементами */
         padding: 0 5px; /* Сужаем отступы */
         max-width: 100%; /* Убираем ограничение по ширине */
@@ -218,25 +218,5 @@ body {
     .category a, .product a {
         font-size: 16px; /* Уменьшаем размер шрифта для удобства на мобильных */
         margin-top: 4px;
-    }
-
-    /* Таблицы на мобильных устройствах */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    th, td {
-        padding: 10px; /* Уменьшаем отступы для мобильных устройств */
-        font-size: 0.85rem; /* Уменьшаем размер шрифта для мобильных устройств */
-    }
-
-    th {
-        font-weight: 580;
-        font-size: 0.90rem; /* Уменьшаем размер шрифта для заголовков на мобильных */
-    }
-
-    td {
-        font-size: 0.850rem; /* Уменьшаем размер шрифта для мобильных */
     }
 }

@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% block title %}Задачи{% endblock %}
+
+{% block content %}
+    <main class="content">
+        <table>
+            <thead>
+                <tr>
+                    <th>Задача</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks | reverse if not task.is_completed %}
+                <tr onclick="showTaskDetails({{ task.id }})">
+                    <td class="ellipsis-text">{{ task.task_description }}</td>
+                    <td>Активно</td>
+                </tr>
+                {% endfor %}
+
+                {% for task in tasks | reverse if task.is_completed %}
+                <tr onclick="showTaskDetails({{ task.id }})">
+                    <td class="ellipsis-text">{{ task.task_description }}</td>
+                    <td>Выполнено</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+
+    <!-- Task viewing modal -->
+    <div id="view-task-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeTaskModal()">&times;</span>
+            <h2>Информация по задаче</h2>
+            <p id="task-details"></p>
+        </div>
+    </div>
+
+    <!-- Task adding modal -->
+    <div id="add-task-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddTaskModal()">&times;</span>
+            <h2>Добавить новую задачу</h2>
+            <br>
+            <form id="add-task-form">
+                <div>
+                    <textarea id="task_description" name="task_description" rows="8" cols="50" required></textarea>
+                </div>
+                <br>
+                <div>
+                    <label for="user_id">Выберите пользователя:</label>
+                    <select id="user_id" name="user_id" required>
+                        {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <br>
+                <div class="button-container" style="display: flex; gap: 10px;">
+                    <button type="button" class="button button-blue" onclick="submitTask()">Добавить</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+
+    <!-- Worker registration modal -->
+    <div id="register-worker-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeRegisterWorkerModal()">&times;</span>
+            <h2>Регистрация</h2>
+            <br>
+            <form id="register-form" method="post" action="/register">
+                <div class="register-field">
+                    <label for="username">Логин:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <br>
+                <div class="register-field">
+                    <label for="password">Пароль:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <br>
+                <div class="register-field">
+                    <label for="first_name">Имя:</label>
+                    <input type="text" id="first_name" name="first_name" required>
+                </div>
+                <br>
+                <div class="register-field">
+                    <label for="last_name">Фамилия:</label>
+                    <input type="text" id="last_name" name="last_name" required>
+                </div>
+                <br>
+                <div class="register-field">
+                    <label for="phone_number">Номер телефона:</label>
+                    <input type="text" id="phone_number" name="phone_number">
+                </div>
+                <br>
+                <div class="register-field">
+                    <label for="birth_date">Дата рождения:</label>
+                    <input type="date" id="birth_date" name="birth_date" required>
+                </div>
+                <br>
+                <div class="button-container" style="display: flex; gap: 10px;">
+                    <button type="submit" class="button button-green">Зарегистрировать</button>
+                    <button type="button" class="button button-red" onclick="closeRegisterWorkerModal()">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block buttons %}
+    {% if user.username == "admin" %}
+    
+        <div class="button-wrapper">
+            <button class="action-button" onclick="openAddTaskModal()">Новая задача</button>
+            <button class="action-button" onclick="openRegisterWorkerModal()">Новый работник</button>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        // Открытие модального окна задачи
+        function showTaskDetails(taskId) {
+            fetch(`/task/${taskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    let details = `
+                        <strong>Номер задачи:</strong> ${data.id}<br>
+                        <strong>Описание:</strong> ${data.task_description}<br>
+                        <strong>Статус:</strong> ${data.is_completed ? "Выполнено" : "Не выполнено"}<br>
+                        <strong>Время создания:</strong> ${data.created_at}<br>
+                        <br>
+                    `;
+                    if (!data.is_completed) {
+                        details += `
+                            <div class="button-container" style="display: flex; gap: 10px;">
+                                <button class="button button-green" onclick="completeTask(${taskId})">Выполнено.</button>
+                            </div>
+                            
+                        `;
+                    }
+                    
+                    document.getElementById('task-details').innerHTML = details;
+
+                    // Показать модальное окно задачи
+                    document.getElementById('view-task-modal').style.display = 'block';
+                })
+                .catch(error => console.error('Ошибка:', error));
+        }
+
+        // Закрытие модального окна задачи
+        function closeTaskModal() {
+            document.getElementById('view-task-modal').style.display = 'none';
+        }
+
+        // Открытие модального окна для добавления задачи
+        function openAddTaskModal() {
+            document.getElementById('add-task-modal').style.display = 'block';
+        }
+
+        // Закрытие модального окна для добавления задачи
+        function closeAddTaskModal() {
+            document.getElementById('add-task-modal').style.display = 'none';
+        }
+
+        // Открытие модального окна для добавления нового работника
+        function openRegisterWorkerModal() {
+            document.getElementById('register-worker-modal').style.display = 'block';
+        }
+
+        // Закрытие модального окна для добавления нового работника
+        function closeRegisterWorkerModal() {
+            document.getElementById('register-worker-modal').style.display = 'none';
+        }
+
+        function showNotification(message) {
+            var notification = document.createElement("div");
+            notification.classList.add("notification-success");
+            notification.innerText = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(function() {
+                notification.classList.add('show');
+            }, 10);
+
+            setTimeout(function() {
+                notification.classList.remove('show');
+                setTimeout(function() {
+                    notification.remove();
+                }, 500);
+            }, 2000);
+        }
+
+        function submitTask() {
+            const taskDescription = document.getElementById("task_description").value;
+            const userId = document.getElementById("user_id").value;
+
+            fetch('/admin/add-task', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    task_description: taskDescription,
+                    user_id: userId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Задача успешно добавлена.')
+                    closeAddTaskModal();
+                    location.reload();
+                } else {
+                    alert("Ошибка при добавлении задачи");
+                }
+            })
+            .catch(error => console.error("Ошибка:", error));
+        }
+
+        function completeTask(taskId) {
+            fetch(`/task/${taskId}/complete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                showNotification(data.message);
+                location.reload(); // Обновление страницы
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+                
+
+    </script>
+{% endblock %}

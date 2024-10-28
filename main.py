@@ -1,9 +1,12 @@
 from fastapi import FastAPI
 from starlette.middleware.base import BaseHTTPMiddleware
-from app.routes import auth, categories_products, tasks_workshifts, invoices
 from app.middleware import AuthMiddleware
 from fastapi.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
+
+from app.routes.client import site
+from app.routes.stuff import auth, head, invoices, tasks, menu, settings, profile
+# nohup uvicorn main:app --host 0.0.0.0 --port 8000 &
 
 app = FastAPI()
 
@@ -12,22 +15,31 @@ app.add_middleware(AuthMiddleware)
 
 # Подключаем маршруты
 app.include_router(auth.router)
-app.include_router(categories_products.router)
-app.include_router(tasks_workshifts.router)
+app.include_router(head.router)
 app.include_router(invoices.router)
+app.include_router(tasks.router)
+app.include_router(menu.router)
+app.include_router(settings.router)
+app.include_router(profile.router)
+app.include_router(site.router)
+
 
 # Подключаем статические файлы (CSS, изображения)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
+app.mount("/images", StaticFiles(directory="app/images"), name="images")
 
 # Подключаем шаблоны
 templates = Jinja2Templates(directory="app/templates")
 
+from datetime import date
+print(date.today())
+
 if __name__ == "__main__":
+
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
     
-  ####  Сетку с иконками сделать не до конци экрана. либол отступ после сетки.
 # Отображение задачь. Базовые задачи.
 # Разобраться с масштабированием на айфонах.
 
@@ -36,8 +48,10 @@ if __name__ == "__main__":
 # Уровни задач ввести. Необязательный. Обязательный. Обязательный с фото. 
 # Учет рабочего времени
 
-
-
 ## СКЛАД:
+# 
+
+
+## САЙТ:
 # 
 

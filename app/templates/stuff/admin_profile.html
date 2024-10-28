@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Профиль Администратора{% endblock %}
+
+{% block content %}
+<main class="content">
+    <!-- Общая сумма -->
+    <div class="total-revenue">
+        <h2>Общая выручка: {{ total_revenue }} руб.</h2>
+    </div>
+
+    <!-- Графики -->
+    <div class="charts">
+        <canvas id="productSalesChart"></canvas>
+        <canvas id="productRevenueChart"></canvas>
+        <canvas id="employeeRevenueChart" style="display: {% if period == 'all' or period == 'month' %}block{% else %}none{% endif %};"></canvas>
+        <canvas id="averageCheckChart" style="display: {% if period == 'month' or period == 'all' %}block{% else %}none{% endif %};"></canvas>
+        <canvas id="salesFrequencyChart"></canvas>
+        <canvas id="categoryPopularityChart"></canvas>
+    </div>
+</main>
+{% endblock %}
+
+{% block buttons %}
+<div class="button-wrapper">
+    <button class="action-button" onclick="changePeriod('day')">За сутки</button>
+    <button class="action-button" onclick="changePeriod('month')">За месяц</button>
+    <button class="action-button" onclick="changePeriod('all')">За все время</button>
+    <button class="action-button" onclick="window.location.href='/logout'">Выход</button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script>
+    function changePeriod(period) {
+        window.location.href = `/stuff/profile?period=${period}`;
+    }
+
+    const productSalesData = {{ product_sales | tojson }};
+    const productRevenueData = {{ product_revenue | tojson }};
+    const employeeRevenueData = {{ employee_revenue | tojson }};
+    const averageCheckData = {{ average_check | tojson }};
+    const salesFrequencyData = {{ sales_frequency | tojson }};
+    const categoryPopularityData = {{ category_popularity | tojson }};
+    
+    const colors = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f', '#edc948'];
+
+    const chartOptions = {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+                callbacks: { label: context => `${context.label || ''}: ${context.raw || 0}` }
+            },
+            datalabels: { anchor: 'center', color: '#ffffff', formatter: (value, context) => value > 5 ? value : '' }
+        },
+        layout: { padding: 15 }
+    };
+
+    function renderCharts() {
+        new Chart(document.getElementById('productSalesChart').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: productSalesData.map(item => item.name),
+                datasets: [{ label: 'Продано, шт', data: productSalesData.map(item => item.sold_count), backgroundColor: colors, borderWidth: 0, borderColor: 'transparent'  }]
+            },
+            options: chartOptions
+        });
+
+        new Chart(document.getElementById('productRevenueChart').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: productRevenueData.map(item => item.name),
+                datasets: [{ label: 'Выручка, руб.', data: productRevenueData.map(item => item.total_revenue), backgroundColor: colors, borderWidth: 0, borderColor: 'transparent'  }]
+            },
+            options: chartOptions
+        });
+
+        new Chart(document.getElementById('employeeRevenueChart').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: employeeRevenueData.map(emp => `${emp.first_name} ${emp.last_name}`),
+                datasets: [{ label: 'Выручка, руб.', data: employeeRevenueData.map(emp => emp.total_revenue), backgroundColor: colors, borderWidth: 0, borderColor: 'transparent'  }]
+            },
+            options: chartOptions
+        });
+
+        new Chart(document.getElementById('averageCheckChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: averageCheckData.map(item => `${item.first_name} ${item.last_name}`),
+                datasets: [{ label: 'Средний чек, руб.', data: averageCheckData.map(item => item.average_check), backgroundColor: colors}]
+            },
+            options: chartOptions
+        });
+
+        new Chart(document.getElementById('salesFrequencyChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: salesFrequencyData.map(item => item.hour),
+                datasets: [{ label: 'Продажи по часам', data: salesFrequencyData.map(item => item.count), backgroundColor: colors[0]}]
+            },
+            options: chartOptions
+        });
+
+        new Chart(document.getElementById('categoryPopularityChart').getContext('2d'), {
+            type: 'pie',
+            data: {
+                labels: categoryPopularityData.map(item => item.category_name),
+                datasets: [{ label: 'Популярность категорий', data: categoryPopularityData.map(item => item.sales), backgroundColor: colors, borderWidth: 0, borderColor: 'transparent'  }]
+                
+            },
+            options: chartOptions
+        });
+    }
+
+    renderCharts();
+</script>
+{% endblock %}

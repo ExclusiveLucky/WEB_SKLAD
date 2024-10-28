@@ -3,8 +3,12 @@ from sqlalchemy.sql import func  # Для использования func.now() 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from datetime import datetime  # Для работы с датами и временем
+import pytz
 
 Base = declarative_base()
+
+
+
 
 class User(Base):
     __tablename__ = "users"
@@ -81,7 +85,7 @@ class Invoice(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now(pytz.timezone('Europe/Moscow')))
     total_amount = Column(Float, default=0)
     status = Column(String, default="open")  # Статус счета (открыт/закрыт)
     closed_at = Column(DateTime, nullable=True)  # Время закрытия счета
@@ -92,6 +96,7 @@ class Invoice(Base):
     items = relationship("InvoiceItem", back_populates="invoice")
     user = relationship("User", foreign_keys=[user_id])
     closed_by_user = relationship("User", foreign_keys=[closed_by])
+
 
     
 class InvoiceItem(Base):

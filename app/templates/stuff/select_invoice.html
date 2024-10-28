@@ -1,0 +1,62 @@
+
+
+{% extends "base.html" %}
+
+{% block title %}Выбор счета{% endblock %}
+
+{% block content %}
+    <main class="content">
+        <table>
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Создатель</th>
+                    <th>Время</th>
+                    <th>Сумма</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for invoice in invoices | reverse %}
+                <tr onclick="addToInvoice({{ invoice.id }})">
+                    <td>{{ invoice.id }}</td>
+                    <td>{{ invoice.user.first_name }} {{ invoice.user.last_name }}</td>
+                    <td>{{ invoice.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ invoice.total_amount }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+{% endblock %}
+
+
+{% block buttons %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function addToInvoice(invoiceId) {
+            var productId = {{ product_id }};
+            var quantity = {{ quantity }};
+            var categoryId = {{ category_id }};
+            
+            fetch(`/stuff/add_to_invoice`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ product_id: productId, invoice_id: invoiceId, quantity: quantity })
+            })
+            .then(response => {
+                if (response.ok) {
+                    localStorage.setItem('invoiceIdToShow', invoiceId); // сохраняем ID счета
+                    window.location.href = `/stuff/invoices`;
+
+                } else {
+                    console.error('Ошибка:', response);
+                }
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+    </script>
+{% endblock %}

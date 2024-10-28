@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Меню{% endblock %}
+
+{% block content %}
+    <main class="content">
+        <div class="categories">
+            {% for category in categories %}
+                <div class="category">
+                    <!-- Кликабельная картинка категории -->
+                    <a href="/stuff/category/{{ category.id }}">
+                        <img src="{{ category.icon_url }}" alt="{{ category.name }}">
+                    </a>
+                    <!-- Кликабельное название категории -->
+                    <a href="/stuff/category/{{ category.id }}">{{ category.name }}</a>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+{% endblock %}
+
+
+{% block buttons %}
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

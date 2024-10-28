@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+<main class="content">
+    <div class="profile-section">
+        <h2>Сегодня</h2>
+        <div class="profile-card">
+            <div class="stat">
+                <span class="stat-label">Отработано:</span>
+                <span class="stat-value">{{ today_hours }}:{{ "%02d"|format(today_minutes) }}</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Заработано:</span>
+                <span class="stat-value">{{ today_earnings }} руб.</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-section">
+        <h2>За этот месяц</h2>
+        <div class="profile-card">
+            <div class="stat">
+                <span class="stat-label">Отработано:</span>
+                <span class="stat-value">{{ month_hours }}:{{ "%02d"|format(month_minutes) }}</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Чеков:</span>
+                <span class="stat-value">{{ month_invoices }}</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Заработано:</span>
+                <span class="stat-value">{{ month_earnings }} руб.</span>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block buttons %}
+    <div class="button-wrapper">
+        <button class="action-button" onclick="window.location.href='/logout'">Выход</button>
+    </div>
+{% endblock %}
+
+
+
+{% block scripts %}
+<style>
+    /* Разделы */
+    .profile-section {
+        width: 100%;
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px 25px;
+        background-color: #3d405b;
+        border-radius: 12px;
+        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .profile-section h2 {
+        font-size: 1.8rem;
+        color: #81b29a;
+        font-weight: 600;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #f4f1de;
+        padding-bottom: 8px;
+        text-align: center;
+    }
+
+    /* Карточки статистики */
+    .profile-card {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        margin-top: 10px;
+        padding: 10px;
+    }
+
+    .stat {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #2c3e50;
+        padding: 18px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-label {
+        font-size: 1.2rem;
+        color: #f4f1de;
+        padding-right: 10px;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #f2cc8f;
+    }
+
+    /* Отступы для разделов */
+    .profile-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 700px;
+        margin: auto;
+        padding: 20px 15px;
+    }
+
+</style>
+{% endblock %}

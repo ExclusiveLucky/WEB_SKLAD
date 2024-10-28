@@ -60,7 +60,7 @@ def close_invoice(invoice_id: int, pay_type: str, db: Session = Depends(get_db),
         raise HTTPException(status_code=404, detail="Счет не найден")
     
     user_obj = db.query(User).filter(User.username == user).first()
-    invoice.closed_at = datetime.utcnow()
+    invoice.closed_at = datetime.now(pytz.timezone('Europe/Moscow'))
     invoice.closed_by = user_obj.id
     invoice.status = "closed"
     invoice.pay_type = pay_type

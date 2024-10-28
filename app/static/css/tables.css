@@ -1,36 +1,181 @@
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0; /* Обновление отступов для большего соответствия стилю */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень для таблицы */
-}
-
-table, th, td {
-    border: 1px solid #ddd;
+    background-color: #353535; /* Тёмный, почти угольный фон таблицы */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 th, td {
-    padding: 12px;
+    padding: 15px 20px;
     text-align: left;
-    border-radius: 6px; /* Добавление скругления углов */
 }
 
 th {
-    background-color: #2980b9; /* Оставляем синий цвет заголовков */
-    color: #ecf0f1; /* Цвет текста меняем на светло-серый для большей гармонии */
-    font-weight: bold; /* Увеличиваем жирность */
+    background-color: #81b29a; /* Глубокий бирюзово-серый для заголовков */
+    font-weight: bold;
+    color: #f4f1de; /* Очень светлый, почти белый текст */
+    font-weight: 600;
+    font-size: 1rem;
+    border-bottom: 2px solid #d9d9d9; /* Лёгкая светлая линия для акцента */
 }
 
 td {
-    background-color: #34495e; /* Тёмный фон для ячеек */
-    color: #ecf0f1; /* Цвет текста */
-    transition: background-color 0.3s ease; /* Плавный переход для hover */
+    background-color: #f2cc8f; /* Темный серо-синий фон для ячеек */
+    font-weight: bold;
+    color: #3c6e71; /* Белый текст для контраста */
+    font-size: 0.95rem;
+    border-bottom: 1px solid #81b29a; /* Граница в цвете заголовков */
+    transition: background-color 0.2s ease;
 }
 
-tr:nth-child(even) {
-    background-color: #2c3e50;
+
+
+tr:hover td {
+    background-color: #81b29a; /* Более тёмный серо-синий при наведении */
+    color: #f4f1de; /* Очень светлый текст при наведении */
 }
 
-td:hover {
-    background-color: #3e4a57; /* Тёмный фон при наведении на ячейку */
+tr:last-child td {
+    border-bottom: none; /* Убираем нижнюю границу у последней строки */
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+tbody tr td:nth-child(5) {
+    font-weight: bold;
+}
+
+tbody tr td:nth-child(5):before {
+    content: '• ';
+    color: #ef233c; /* Яркий красный для статуса */
+}
+
+
+.ellipsis-text {
+    white-space: nowrap; /* Запрещает перенос строк */
+    overflow: hidden; /* Обрезает текст, который выходит за границы */
+    text-overflow: ellipsis; /* Добавляет многоточие в конце обрезанного текста */
+    max-width: 300px; /* Устанавливает максимальную ширину, чтобы ограничить выводимый текст */
+}
+
+/* Общие стили для контейнера */
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    background-color: #1f1f2e; /* Темный фон */
+    color: #4a5568; /* Светлый текст */
+}
+
+/* Заголовок профиля */
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Кнопки выбора периода */
+.period-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.period-button {
+    padding: 8px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    background: #4a5568; /* Более четкий цвет */
+    color: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.period-button:hover {
+    background: #2d3748; /* Темнее при наведении */
+}
+
+/* Сводная информация */
+.summary {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    padding: 15px;
+    background-color: #4a5568; /* Контрастный темный фон */
+    color: #d69e2e; /* Желтый акцент */
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    flex: 1 1 200px;
+    max-width: 220px;
+}
+
+/* Секция графиков */
+.charts {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+
+/* Отдельные графики */
+#product-sales-chart, #product-revenue-chart, #employee-revenue-chart {
+    width: 100%;
+    max-width: 400px;
+    height: 250px;
+    background: #2d3748; /* Нейтральный фон */
+    border-radius: 8px;
+    padding: 15px;
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 768px) {
+    .content {
+        padding: 15px;
+    }
+
+    .summary {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .period-buttons {
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .stat-card {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .charts {
+        gap: 15px;
+    }
+    
+    #product-sales-chart, #product-revenue-chart, #employee-revenue-chart {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        background: #3d405b;
+        border-radius: 8px;
+        padding: 15px;
+    }
 }

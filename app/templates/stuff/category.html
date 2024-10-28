@@ -1,56 +1,51 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Товары</title>
-    <link rel="stylesheet" href="/static/css/base.css">
-    <link rel="stylesheet" href="/static/css/layout.css"> <!-- для сетки продуктов -->
-    <link rel="stylesheet" href="/static/css/buttons.css"> <!-- для кнопок -->
-    <link rel="stylesheet" href="/static/css/quantity-controls.css"> <!-- для контроля количества -->
-    <link rel="stylesheet" href="/static/css/modals.css"> <!-- для модальных окон выбора количества -->
-    <link rel="stylesheet" href="/static/css/notifications.css"> <!-- для уведомления о продаже -->
+{% extends "base.html" %}
 
-</head>
-<body>
-    <!-- <h1>{{ category.name }}</h1> -->
-    <!-- Сетка продуктов -->
-    <div class="products">
-        {% for product in products %}
-            <div class="product">
-                <img src="{{ product.image_url }}" alt="{{ product.name }}" onclick="openModal({{ product.id }})">
-                <!-- Сделаем название кликабельным, как и изображение -->
-                <a href="javascript:void(0);" onclick="openModal({{ product.id }})">{{ product.name }}</a>
-            </div>
+{% block title %}Меню{% endblock %}
 
-            <!-- Модальное окно для каждого продукта -->
-            <div id="modal-{{ product.id }}" class="modal">
-                <div class="modal-content">
-                    <span class="close" onclick="closeModal({{ product.id }})">&times;</span>
-                    <h2>{{ product.name }}</h2>
-
-                    <!-- Кнопки для изменения количества -->
-                    <div class="quantity-controls">
-                        <button type="button" onclick="updateQuantity({{ product.id }}, -1)">-</button>
-                        <input type="text" id="quantity-{{ product.id }}" value="1" readonly>
-                        <button type="button" onclick="updateQuantity({{ product.id }}, 1)">+</button>
-                    </div>
-
-                    <div class="button-container" style="display: flex; gap: 10px;">
-                        <button type="button" class="button button-green" onclick="createNewInvoice({{ product.id }}, '{{ product.name }}')">Новый счет</button>
-                        <button type="button" class="button button-green" onclick="redirectToInvoices({{ product.id }}, '{{ product.name }}', '{{ category.id }}')">Добавить к счету</button>
+{% block content %}
+    <main class="content">
+        <div class="products">
+            {% for product in products %}
+                <div class="product">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" onclick="openModal({{ product.id }})">
+                    <!-- Сделаем название кликабельным, как и изображение -->
+                    <a href="javascript:void(0);" onclick="openModal({{ product.id }})">{{ product.name }}</a>
+                </div>
+    
+                <!-- Модальное окно для каждого продукта -->
+                <div id="modal-{{ product.id }}" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal({{ product.id }})">&times;</span>
+                        <h2>{{ product.name }}</h2>
+                        <br>
+                        <!-- Кнопки для изменения количества -->
+                        <li class="item-entry">
+                            <div class="quantity-controls">
+                                <button class="quantity-button" onclick="updateQuantity({{ product.id }}, -1)">-</button>
+                                <input type="text" id="quantity-{{ product.id }}" value="1" readonly>
+                                <button class="quantity-button" onclick="updateQuantity({{ product.id }}, 1)">+</button>
+                            </div>
+                        </li>
+                        <br>
+                        <div class="button-container" style="display: flex; gap: 10px;">
+                            <button type="button" class="button button-green" onclick="createNewInvoice({{ product.id }}, '{{ product.name }}')">Новый чек</button>
+                            <button type="button" class="button button-green" onclick="redirectToInvoices({{ product.id }}, '{{ product.name }}', '{{ category.id }}')">К чеку</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
+    </main>
+{% endblock %}
+
+
+{% block buttons %}
+    <div class="button-wrapper">
+        <button class="action-button button-1" onclick="window.location.href='/stuff/menu'">Назад</button>
     </div>
-    <!-- Кнопка возврата -->
-    <div class="buttons">
-        <button type="button" class="button button-yellow" onclick="window.location.href='/'">Категории</button>
-    </div>
+{% endblock %}
 
-
-
+{% block scripts %}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var notification = localStorage.getItem('notification');
@@ -116,14 +111,15 @@
         function createNewInvoice(productId, productName) {
             var quantityField = document.getElementById("quantity-" + productId).value;
 
-            fetch('/create_invoice', {
+            fetch('/stuff/create_invoice', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     product_id: parseInt(productId),
-                    quantity: parseInt(quantityField)
+                    quantity: parseInt(quantityField),
+                    invoice_id: 0
                 })
             })
             .then(response => {
@@ -133,8 +129,10 @@
                 return response.json();
             })
             .then(data => {
-                showNotification(`Создан новый счет с "${productName}" ${quantityField} шт.`);
                 closeModal(productId);
+                localStorage.setItem('invoiceIdToShow', data.invoiceId); // сохраняем ID счета
+                window.location.href = `/stuff/invoices`;
+
             })
             .catch(error => console.error('Ошибка:', error));
         }
@@ -142,9 +140,7 @@
             var quantityField = document.getElementById("quantity-" + productId).value;
 
             // Перенаправляем пользователя на новую страницу выбора счета для добавления товара
-            window.location.href = `/select_invoice/${productId}/${quantityField}/${categoryId}`;
+            window.location.href = `/stuff/select_invoice/${productId}/${quantityField}/${categoryId}`;
         }
     </script>
-
-</body>
-</html>
+{% endblock %}

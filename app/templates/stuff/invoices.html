@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+{% block title %}Счета{% endblock %}
+
+{% block content %}
+    <main class="content">
+        <table>
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Время</th>
+                    <th>Имя</th>
+                    <th>Статус</th>
+                    <th>Сумма</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr onclick="createInvoice()">
+                    <td></td>
+                    <td></td>
+                    <td>Новый счет</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {% for invoice in invoices | reverse  if invoice.pay_type is none %}
+                <tr onclick="showInvoiceDetails({{ invoice.id }})">
+                    <td>{{ invoice.id }}</td>
+                    <td>{{ invoice.created_at.strftime('%H:%M') }}</td>
+                    <td>{{ invoice.user.first_name }}</td>
+                    <td>Открыт</td> <!-- Заменяем None на "Открыт" -->
+                    <td>{{ invoice.total_amount }}</td>
+                </tr>
+                {% endfor %}
+                
+                <!-- Затем выводим закрытые счета -->
+                {% for invoice in invoices | reverse  if invoice.pay_type is not none %}
+                <tr onclick="showInvoiceDetails({{ invoice.id }})">
+                    <td>{{ invoice.id }}</td>
+                    <td>{{ invoice.created_at.strftime('%H:%M') }}</td>
+                    <td>{{ invoice.user.first_name }}</td>
+                    <td>{{ invoice.pay_type }}</td> <!-- Выводим тип оплаты -->
+                    <td>{{ invoice.total_amount }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+
+    <!-- Модальное окно для счетов -->
+    <div id="invoice-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Информация по счету</h2>
+            <p id="invoice-details"></p>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block buttons %}
+    <!-- <div class="button-wrapper">
+        <button class="action-button button-1">Обновить</button>
+        <button class="action-button button-2">Скачать PDF</button>
+        <button class="action-button button-3">Создать счет</button>
+    </div> -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let currentInvoiceId = null;
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const invoiceIdToShow = localStorage.getItem('invoiceIdToShow');
+        
+        if (invoiceIdToShow) {
+            // Открываем детали счета
+            showInvoiceDetails(invoiceIdToShow);
+            
+            // Удаляем ID из localStorage после показа
+            localStorage.removeItem('invoiceIdToShow');
+        }
+    });
+
+    // Функция для показа уведомления
+    function showNotification(message) {
+        var notification = document.createElement("div");
+        notification.classList.add("notification-success");
+        notification.innerText = message;
+
+        document.body.appendChild(notification);
+
+        // Показываем уведомление с задержкой
+        setTimeout(function() {
+            notification.classList.add('show');
+        }, 10);
+
+        // Скрываем уведомление через 2 секунды
+        setTimeout(function() {
+            notification.classList.remove('show');
+            setTimeout(function() {
+                notification.remove();
+            }, 500); // Ждем окончания анимации исчезновения
+        }, 2000);
+    }
+
+    // Функция для создания нового счета 
+    function createInvoice() { 
+        fetch('/stuff/create_invoice', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                product_id:0,
+                quantity:0,
+                invoice_id:0
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => { throw new Error(data.detail); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            localStorage.setItem('invoiceIdToShow', data.invoiceId); // сохраняем ID счета
+            closeModal();
+            location.reload();
+        })
+        .catch(error => console.error('Ошибка:', error));
+    }
+    function showInvoiceDetails(invoiceId) {
+        currentInvoiceId = invoiceId;
+        fetch(`/stuff/invoice/${invoiceId}`)
+            .then(response => response.json())
+            .then(data => {
+                let details = `
+                    <strong>Номер счета:</strong> ${data.id}<br><br>
+                    <strong>Создатель:</strong> ${data.user.first_name} ${data.user.last_name}<br>
+                    <strong>Дата создания:</strong> ${data.created_at}<br>
+                    <br>
+                    <ul class="item-list">
+                        ${data.items.map(item => `
+                            <li class="item-entry">
+                                <span>${item.product_name} ${item.price}р</span>
+                                <div class="quantity-controls">
+                                    <button class="quantity-button" onclick="decreaseQuantity(${item.id},${data.id}, ${item.price})">-</button>
+                                    <input type=""text"" id="quantity-${item.id}" value="${item.quantity}" min="1">
+                                    <button class="quantity-button" onclick="increaseQuantity(${item.id},${data.id}, ${item.price})">+</button>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    <br>
+                    <h2>
+                        <strong>Итого:</strong> <span id="total-amount">${data.total_amount}</span> руб.
+                    </h2>
+                    <br>
+                `;
+                    // <div class="button-container" style="display: flex; gap: 10px;">
+                    //     <button class="button button-green" onclick="addItemToInvoice(${data.id})">Добавить товар</button>
+                    // </div>
+                if (data.status === "open") {
+                    details += `
+                        <div class="button-container" style="display: flex; gap: 10px;">
+                            <button class="button button-orange" onclick="closeInvoice(${data.id}, 'cash')">Наличные</button>
+                            <button class="button button-red" onclick="closeInvoice(${data.id}, 'card')">Карта</button>
+                        </div>
+                    `;
+                } else {
+                    details += `<strong>Тип платежа:</strong> ${data.pay_type || 'Не указан'}<br>`;
+                }
+
+
+
+                document.getElementById('invoice-details').innerHTML = details;
+                document.getElementById('invoice-modal').classList.add('show');
+
+                // Установка начальной суммы
+                updateTotalAmount();
+            })
+            .catch(error => console.error('Ошибка:', error));
+    }
+
+    function increaseQuantity(product_id, invoice_id, price) {
+        const quantityInput = document.getElementById(`quantity-${product_id}`);
+        const newQuantity = parseInt(quantityInput.value) + 1;
+        quantityInput.value = newQuantity;
+
+        updateQuantityInDatabase(product_id, invoice_id, newQuantity);
+        updateTotalAmount(price);
+    }
+
+    function decreaseQuantity(product_id, invoice_id, price) {
+        const quantityInput = document.getElementById(`quantity-${product_id}`);
+        if (parseInt(quantityInput.value) > 0) {
+            const newQuantity = parseInt(quantityInput.value) - 1;
+            quantityInput.value = newQuantity;
+
+            updateQuantityInDatabase(product_id, invoice_id, newQuantity);
+            updateTotalAmount(-price);
+        }
+    }
+
+    function updateQuantityInDatabase(product_id, invoice_id, quantity) {
+        fetch(`/stuff/update_quantity`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ product_id: product_id, invoice_id: invoice_id, quantity: quantity })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка при обновлении количества в базе');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Количество обновлено');
+        })
+        .catch(error => console.error('Ошибка:', error));
+    }
+
+    // Функция для пересчета итоговой суммы
+    function updateTotalAmount(priceChange = 0) {
+        const totalElement = document.getElementById("total-amount");
+        const currentTotal = parseFloat(totalElement.innerText) || 0;
+        totalElement.innerText = (currentTotal + priceChange).toFixed(2);
+    }
+
+    function closeModal() {
+        document.getElementById('invoice-modal').classList.remove('show');
+        window.location.reload();
+    }
+
+    function closeInvoice(invoiceId, payType) {
+        fetch(`/stuff/invoice/${invoiceId}/close/${payType}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            window.location.reload();
+        })
+        .catch(error => console.error('Ошибка:', error));
+    }
+</script>
+{% endblock %}

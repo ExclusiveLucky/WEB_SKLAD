@@ -8,8 +8,9 @@
     bottom: 0; /* Фиксируем у нижней части экрана */
     width: 100%;
     height: auto; /* Высота окна настраивается автоматически */
-    background-color: rgba(0, 0, 0, 0.0);
+    background-color: rgba(0, 0, 0, 0.0); /* Полупрозрачный фон для модального слоя */
     padding-bottom: 20px; /* Отступ от нижнего края экрана */
+    /* transition: opacity 0.3s ease; Плавное проявление */
 }
 
 .modal.show {
@@ -19,44 +20,79 @@
 }
 
 .modal-content {
-    background-color: #2c3e50; /* Тёмный фон для содержимого модального окна */
+    background-color: #3d405b; /* Темно-синий фон для содержимого модального окна */
     margin: auto; /* Центровка содержимого */
-    padding: 20px; /* Внутренний отступ */
+    padding: 25px; /* Внутренний отступ */
     border-radius: 10px; /* Скругление углов */
     max-width: 500px; /* Максимальная ширина */
     text-align: left; /* Выравнивание текста по левому краю */
-    color: white; /* Цвет текста */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4); /* Тень для объема */
+    color: #f4f1de; /* Светлый цвет текста */
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5); /* Более заметная тень для объема */
+}
+
+.item-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.item-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    color: #f2cc8f; /* Цвет для позиции */
 }
 
 .quantity-controls {
-    display: flex; /* Используем Flexbox для выравнивания */
-    align-items: center; /* Вертикальное выравнивание по центру */
-    justify-content: center; /* Горизонтальное выравнивание по центру */
-    margin: 15px 0; /* Отступы сверху и снизу */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.quantity-button {
+    background-color: #e07a5f; /* Цвет кнопок */
+    border: none;
+    border-radius: 4px;
+    width: 18px; /* Уменьшенная ширина */
+    height: 18px; /* Уменьшенная высота */
+    font-size: 0.8rem; /* Уменьшенный размер текста */
+    color: #f4f1de; /* Светлый текст */
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+
+.quantity-button:hover {
+    background-color: #f2cc8f; /* Изменение цвета на при наведении */
 }
 
 .quantity-controls input {
-    text-align: center; /* Выравнивание текста по центру */
-    width: 50px; /* Ширина поля ввода */
-    height: 40px; /* Высота поля ввода */
-    font-size: 18px; /* Размер шрифта */
-    border: none; /* Без рамок */
-    border-radius: 5px; /* Скругленные углы */
+    width: 50px;
+    text-align: center;
+    font-size: 1rem;
+    border: 1px solid #e07a5f;
+    border-radius: 5px;
+    background-color: #f2cc8f;
+    color: #3d405b;
 }
-
+/* Стили для кнопки закрытия */
 .close {
-    color: white; /* Цвет крестика закрытия */
-    float: right; /* Положение крестика справа */
-    font-size: 28px; /* Размер шрифта */
-    font-weight: bold; /* Жирный шрифт */
-    cursor: pointer; /* Курсор-указатель при наведении */
+    color: #f2cc8f; /* Цвет крестика закрытия */
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
 .close:hover,
 .close:focus {
-    color: #f1c40f; /* Изменение цвета на жёлтый при наведении */
+    color: #e07a5f; /* Изменение цвета на акцентный при наведении */
 }
+
+
 
 /* button {
 /*     background-color: #2B9E7D; /* Основной цвет кнопки */

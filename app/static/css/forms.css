@@ -1,47 +1,105 @@
-/* Стили для страницы логина и регистрации */
+/* Общие стили для формы регистрации и логина */
 form {
-    background-color: #2c3e50; /* Темный фон формы */
-    padding: 30px; /* Внутренние отступы */
-    border-radius: 10px; /* Закругленные углы формы */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Тень для объема */
+    background-color: #3d405b; /* Тёмный фон формы */
+    padding: 25px; /* Оптимизированные внутренние отступы */
+    border-radius: 12px; /* Скругленные углы */
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15); /* Глубокая тень для объема */
     max-width: 100%; /* Максимальная ширина формы */
+    color: #f4f1de; /* Светлый цвет текста */
 }
 
 .login-container, .register-container {
-    background-color: #2c3e50; /* Фон контейнеров */
-    padding: 40px; /* Внутренние отступы контейнеров */
-    border-radius: 10px; /* Закругленные углы */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Тень для объема */
+    background-color: #3d405b; /* Фон контейнера */
+    padding: 40px; /* Оптимальные отступы */
+    border-radius: 12px; /* Закругленные углы контейнера */
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2); /* Тень для объема */
     text-align: center; /* Выравнивание по центру */
-    width: 100%; /* Ширина контейнеров */
-    max-width: 400px; /* Максимальная ширина 400px */
-    margin: 0 auto; /* Центрируем по горизонтали */
-    margin-top: 50px; /* Отступ сверху */
+    width: 100%; /* Занимает всю ширину */
+    max-width: 420px; /* Максимальная ширина для больших экранов */
+    margin: auto; /* Центрирование */
+    margin-top: 60px; /* Отступ сверху */
+    color: #f4f1de; /* Цвет текста */
 }
 
+/* Стили для формы */
 .login-form, .register-form {
-    display: flex; /* Флексбокс для формы */
-    flex-direction: column; /* Элементы формы располагаются вертикально */
-    gap: 20px; /* Расстояние между элементами формы */
+    display: flex; /* Flexbox для выравнивания */
+    flex-direction: column; /* Вертикальная структура */
+    gap: 18px; /* Промежуток между элементами формы */
 }
 
 .login-field, .register-field {
-    display: flex; /* Флексбокс для полей формы */
+    display: flex; /* Flexbox для полей формы */
     flex-direction: column; /* Поля располагаются вертикально */
-    text-align: left; /* Текст выровнен по левому краю */
+    text-align: left; /* Текст выравнен по левому краю */
     margin-bottom: 15px; /* Отступ снизу у полей */
 }
 
 .login-field label, .register-field label {
-    color: #ecf0f1; /* Цвет текста светлый */
-    margin-bottom: 5px; /* Отступ снизу у меток */
+    color: #e07a5f; /* Яркий цвет для акцентов */
+    margin-bottom: 6px; /* Оптимальный отступ снизу */
+    font-size: 0.95rem; /* Уменьшенный, аккуратный размер текста */
 }
 
 .login-field input, .register-field input {
-    padding: 10px; /* Внутренние отступы в полях ввода */
-    width: 100%; /* Поля ввода занимают всю ширину контейнера */
-    border: none; /* Убираем рамку */
-    border-radius: 5px; /* Закругленные углы полей */
-    box-sizing: border-box; /* Включаем отступы и границы в общую ширину */
-    font-size: 16px; /* Размер шрифта */
+    padding: 12px; /* Увеличенные внутренние отступы */
+    width: 100%; /* Поля ввода занимают всю ширину */
+    border: 2px solid #81b29a; /* Цвет границы в стиле акцента */
+    border-radius: 8px; /* Скругленные углы */
+    background-color: #f4f1de; /* Светлый фон для полей ввода */
+    font-size: 1rem; /* Удобный для чтения размер шрифта */
+    color: #3d405b; /* Цвет текста */
+    outline: none; /* Убираем стандартное выделение */
+    transition: border-color 0.3s ease; /* Плавное изменение цвета при фокусе */
+}
+
+.login-field input:focus, .register-field input:focus {
+    border-color: #e07a5f; /* Цвет границы при фокусе */
+}
+
+/* Кнопки */
+.button-green {
+    background-color: #81b29a;
+    color: #f4f1de;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-green:hover {
+    background-color: #6a9c86; /* Более тёмный оттенок при наведении */
+}
+
+.button-red {
+    background-color: #e07a5f;
+    color: #f4f1de;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px; /* Отступ сверху для отделения кнопок */
+}
+
+.button-red:hover {
+    background-color: #d0654a; /* Более тёмный оттенок при наведении */
+}
+
+/* Адаптивный дизайн */
+@media (max-width: 768px) {
+    .login-container, .register-container {
+        padding: 30px;
+        margin-top: 40px;
+    }
+
+    .button-green, .button-red {
+        font-size: 0.9rem; /* Меньше на мобильных */
+        padding: 10px;
+    }
 }

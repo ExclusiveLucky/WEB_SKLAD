@@ -1,9 +1,5 @@
 from .dependencies import *
 
-def get_current_day():
-    return datetime.now().isoweekday()
-
-
 @router.get("/task/{task_id}")
 def get_task(task_id: int, db: Session = Depends(get_db)):
     # Получаем задачу по ID

@@ -1,0 +1,169 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #9e8e85ec;
+    color: #333;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    margin-right: 5px;
+    background-color: #6f4e37;
+    color: #fff;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-weight: bold; /* Сделать текст жирным */
+}
+
+.logo img {
+    width: 70px; /* Размер логотипа, можно настроить */
+    height: auto; /* Сохранить пропорции */
+    margin-right: 5px; /* Отступ между логотипом и текстом */
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+.hero-banner {
+    background-image: url('https://sun9-63.userapi.com/impf/Z_UFvGjE9NKQkX2x_hM7d4QB1oxJU0efvFml0Q/8o73wcF7VNU.jpg?size=1920x768&quality=95&crop=22,148,1227,490&sign=f618a254057dc2787adbeaf476213e24&type=cover_group');
+    background-size: cover;
+    background-position: center center; /* Центр изображения всегда в центре экрана */
+    height: 500px;
+    display: flex;
+    justify-content: flex-end; /* Сдвинуть текст вправо */
+    align-items: flex-end; /* Сдвинуть текст вниз */
+    color: white;
+    text-align: right; /* Выравнивание текста по правому краю */
+    padding: 20px; /* Добавляем отступы для контроля положения текста */
+}
+
+.hero-banner h1 {
+    font-size: 50px;
+    text-shadow: 2px 2px 0px black, /* Тень вправо и вниз */
+                 -2px -2px 0px black, /* Тень влево и вверх */
+                 2px -2px 0px black, /* Тень вправо и вверх */
+                 -2px 2px 0px black; /* Тень влево и вниз */
+}
+
+.hero-banner p {
+    font-size: 24px;
+    margin-top: 10px;
+    text-shadow: 2px 2px 0px black, 
+                 -2px -2px 0px black, 
+                 2px -2px 0px black, 
+                 -2px 2px 0px black;
+}
+
+.button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #e67e22;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.specialties {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.specialties h2 {
+    font-size: 36px;
+    margin-bottom: 30px;
+}
+
+.specialties-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.specialty {
+    max-width: 250px;
+    margin-bottom: 20px;
+}
+
+.specialty img {
+    width: 100%; /* ширина по контейнеру */
+    height: 200px; /* фиксированная высота для всех изображений */
+    object-fit: cover; /* обрезка изображения для сохранения пропорций */
+    border-radius: 10px;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #6f4e37;
+    color: white;
+}
+
+/* Адаптация под мобильные устройства */
+@media (max-width: 768px) {
+    /* header {
+        flex-direction: column;
+        text-align: center;
+    } */
+
+    nav ul li {
+        margin-left: 10px;
+        /* margin-bottom: 10px; */
+    }
+
+    .hero-banner {
+        height: 300px;
+    }
+
+    .hero-banner h1 {
+        font-size: 32px;
+    }
+
+    .hero-banner p {
+        font-size: 18px;
+    }
+
+    /* .specialties-grid {
+        flex-direction: column;
+        align-items: center;
+        grid-template-columns: repeat(2, 1fr); 
+    } */
+
+    .specialty img {
+        width: 50%; /* ширина по контейнеру */
+        height: 100px; /* фиксированная высота для всех изображений */
+        object-fit: cover; /* обрезка изображения для сохранения пропорций */
+        border-radius: 5px;
+    }
+
+    .specialties h2 {
+        font-size: 28px;
+    }
+
+    .button {
+        font-size: 16px;
+    }
+}
