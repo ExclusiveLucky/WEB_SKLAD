@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block title %}Настройки{% endblock %}
+
+{% block content %}
+<main class="content">
+    <!-- Секция для отображения таблицы продуктов -->
+    <section id="products-section" class="table-section" style="display: none;">
+        <h3>Товары</h3>
+        <table id="products-table" class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Товар</th>
+                    <th>Цена</th>
+                    <th>Кат</th>
+                    <th>Продано</th>
+                    <th>URL</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="products-tbody">
+                <!-- Данные будут динамически заполняться -->
+            </tbody>
+            <tfoot>
+                <tr class="add-row" onclick="addRow('products')">
+                    <td colspan="7"><img src="https://img.icons8.com/cotton/100/add-webpage.png" class="delete-icon"> Добавить</td>
+                </tr>
+            </tfoot>
+        </table>
+    </section>
+
+    <!-- Секция для отображения таблицы категорий -->
+    <section id="categories-section" class="table-section" style="display: none;">
+        <h3>Категории</h3>
+        <table id="categories-table" class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Категория</th>
+                    <th>URL</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="categories-tbody">
+                <!-- Данные будут динамически заполняться -->
+            </tbody>
+            <tfoot>
+                <tr class="add-row" onclick="addRow('categories')">
+                    <td colspan="4"><img src="https://img.icons8.com/cotton/100/add-webpage.png" class="delete-icon"> Добавить</td>
+                </tr>
+            </tfoot>
+        </table>
+    </section>
+    <!-- Секция для отображения таблицы счетов -->
+    <section id="invoices-section" class="table-section" style="display: none;">
+        <h3>Категории</h3>
+        <table id="invoices-table" class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Работник</th>
+                    <th>Дата</th>
+                    <th>Сумма</th>
+                    <th>Статус</th>
+                    <th>Оплата</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="invoices-tbody">
+    
+            </tbody>
+            <tfoot>
+                <tr class="add-row" onclick="addRow('invoices')">
+                    <td colspan="7"><img src="https://img.icons8.com/cotton/100/add-webpage.png" class="delete-icon"> Добавить</td>
+                </tr>
+            </tfoot>
+        </table>
+    </section>
+    <!-- Секция для отображения таблицы задачь -->
+    <section id="weekly_tasks-section" class="table-section" style="display: none;">
+        <h3>Категории</h3>
+        <table id="weekly_tasks-table" class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>День</th>
+                    <th>Описание</th>
+                    <th>Уровень</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="weekly_tasks-tbody">
+                <!-- Данные будут динамически заполняться -->
+            </tbody>
+            <tfoot>
+                <tr class="add-row" onclick="addRow('weekly_tasks')">
+                    <td colspan="5"><img src="https://img.icons8.com/cotton/100/add-webpage.png" class="delete-icon"> Добавить</td>
+                </tr>
+            </tfoot>
+        </table>
+    </section>
+</main>
+{% endblock %}
+
+{% block buttons %}
+    <div class="button-wrapper">
+        <button class="action-button" onclick="showTable('products')">Товары</button>
+        <button class="action-button" onclick="showTable('categories')">Категории</button>
+        <button class="action-button" onclick="showTable('invoices')">Счета</button>
+        <button class="action-button" onclick="showTable('weekly_tasks')">Задачи</button>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Универсальная функция для загрузки данных таблицы
+    async function loadData(table) {
+        const response = await fetch(`/stuff/admin/settings/${table}`);
+        const data = await response.json();
+        const tbody = document.getElementById(`${table}-tbody`);
+        tbody.innerHTML = '';
+
+        data.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = generateRowHtml(table, item);
+            tbody.appendChild(row);
+        });
+    }
+
+    // Генерация HTML для строки таблицы
+    function generateRowHtml(table, item) {
+        if (table === 'products') {
+            return `
+                <td>${item.id}</td>
+                <td contenteditable="true" class="ellipsis-text" onblur="updateData('${table}', ${item.id}, 'name', this.innerText)">${item.name}</td>
+                <td contenteditable="true" class="ellipsis-text" onblur="updateData('${table}', ${item.id}, 'price', this.innerText)">${item.price}</td>
+                <td contenteditable="true" class="ellipsis-text" onblur="updateData('${table}', ${item.id}, 'category_id', this.innerText)">${item.category_id}</td>
+                <td contenteditable="true" class="ellipsis-text" onblur="updateData('${table}', ${item.id}, 'sold_count', this.innerText)">${item.sold_count}</td>
+                <td contenteditable="true" class="ellipsis-text" onblur="updateData('${table}', ${item.id}, 'image_url', this.innerText)">${item.image_url}</td>
+                <td><img src="https://img.icons8.com/cotton/100/trash--v1.png" alt="Удалить" onclick="deleteData('${table}', ${item.id})" class="delete-icon"></td>
+            `;
+        } else if (table === 'categories') {
+            return `
+                <td>${item.id}</td>
+                <td contenteditable="true" class="ellipsis-text" onblur="updateData('${table}', ${item.id}, 'name', this.innerText)">${item.name}</td>
+                <td contenteditable="true" class="ellipsis-text" onblur="updateData('${table}', ${item.id}, 'icon_url', this.innerText)">${item.icon_url}</td>
+                <td><img src="https://img.icons8.com/cotton/100/trash--v1.png" alt="Удалить" onclick="deleteData('${table}', ${item.id})" class="delete-icon"></td>
+            `;
+        } else if (table === 'weekly_tasks') {
+            return `
+                <td>${item.id}</td>
+                <td contenteditable="true" class="ellipsis-text" onblur="updateData('${table}', ${item.id}, 'day', this.innerText)">${item.day}</td>
+                <td contenteditable="true" class="ellipsis-text" onblur="updateData('${table}', ${item.id}, 'description', this.innerText)">${item.description}</td>
+                <td contenteditable="true" class="ellipsis-text" onblur="updateData('${table}', ${item.id}, 'level', this.innerText)">${item.level}</td>
+                <td><img src="https://img.icons8.com/cotton/100/trash--v1.png" alt="Удалить" onclick="deleteData('${table}', ${item.id})" class="delete-icon"></td>
+            `;
+        } else if (table === 'invoices') {
+            return `
+                <td>${item.id}</td>
+                <td contenteditable="true" class="ellipsis-text" onblur="updateData('${table}', ${item.id}, 'user_id', this.innerText)">${item.user_id}</td>
+                <td contenteditable="true" class="ellipsis-text" onblur="updateData('${table}', ${item.id}, 'created_at', this.innerText)">${item.created_at}</td>
+                <td contenteditable="true" class="ellipsis-text" onblur="updateData('${table}', ${item.id}, 'total_amount', this.innerText)">${item.total_amount}</td>
+                <td contenteditable="true" class="ellipsis-text" onblur="updateData('${table}', ${item.id}, 'status', this.innerText)">${item.status}</td>
+                <td contenteditable="true" class="ellipsis-text" onblur="updateData('${table}', ${item.id}, 'pay_type', this.innerText)">${item.pay_type}</td>
+                <td><img src="https://img.icons8.com/cotton/100/trash--v1.png" alt="Удалить" onclick="deleteData('${table}', ${item.id})" class="delete-icon"></td>
+            `;
+        }
+    }
+
+    // Универсальная функция для добавления новой строки
+    async function addRow(table) {
+        await fetch(`/stuff/admin/settings/${table}`, { method: 'POST' });
+        await loadData(table);
+    }
+
+    // Универсальная функция для обновления данных
+    async function updateData(table, id, field, value) {
+        await fetch(`/stuff/admin/settings/${table}/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ field, value })
+        });
+    }
+
+    // Универсальная функция для удаления данных
+    async function deleteData(table, id) {
+        await fetch(`/stuff/admin/settings/${table}/${id}`, { method: 'DELETE' });
+        await loadData(table);
+    }
+
+    // Переключение между таблицами
+    function showTable(table) {
+        document.getElementById('products-section').style.display = table === 'products' ? 'block' : 'none';
+        document.getElementById('categories-section').style.display = table === 'categories' ? 'block' : 'none';
+        document.getElementById('invoices-section').style.display = table === 'invoices' ? 'block' : 'none';
+        document.getElementById('weekly_tasks-section').style.display = table === 'weekly_tasks' ? 'block' : 'none';
+        loadData(table);
+    }
+</script>
+{% endblock %}

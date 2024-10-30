@@ -54,6 +54,16 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+.table-section {
+    flex: 1;
+    padding: 10px;
+    background-color: #f2cc8f; /* Светлый желтоватый фон для контента */
+    border-radius: 8px;
+    margin: 15px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
 /* Блок кнопок по центру */
 .button-wrapper {
     display: flex;
@@ -182,6 +192,11 @@ body {
         padding: 5px;
     }
 
+    .table-section {
+        margin: 10px;
+        padding: 5px;
+    }
+
     .action-button {
         padding: 10px;
         font-size: 0.9rem;
@@ -226,6 +241,11 @@ body {
         border-collapse: collapse;
     }
 
+    .table-section {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
     th, td {
         padding: 10px; /* Уменьшаем отступы для мобильных устройств */
         font-size: 0.85rem; /* Уменьшаем размер шрифта для мобильных устройств */
@@ -238,5 +258,9 @@ body {
 
     td {
         font-size: 0.850rem; /* Уменьшаем размер шрифта для мобильных */
+    }
+
+    .ellipsis-text {
+        max-width: 50px;
     }
 }

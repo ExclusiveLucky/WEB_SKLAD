@@ -1,0 +1,428 @@
+{% extends "base.html" %}
+
+{% block title %}Профиль Администратора{% endblock %}
+
+{% block content %}
+<main class="content">
+    <!-- Графики с заголовками и подложкой -->
+    <div class="chart-container">
+        <div class="chart-header">Выручка {{ total_revenue }} руб.</div>
+        <canvas id="productRevenueChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <div class="chart-header">Топ 10 самых продаваемых позиций</div>
+        <canvas id="topProductsChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <div class="chart-header">Выручка сотрудников</div>
+        <canvas id="employeeRevenueChart"></canvas>
+    </div>
+    
+    <div class="chart-container">
+        <div class="chart-header">Средний чек сотрудников</div>
+        <canvas id="averageCheckChart"></canvas>
+    </div>
+    
+    <div class="chart-container">
+        <div class="chart-header">Тренд по времени</div>
+        <canvas id="salesFrequencyChart"></canvas>
+    </div>
+    
+    <div class="chart-container">
+        <div class="chart-header">Тренд по категориям</div>
+        <canvas id="categoryPopularityChart"></canvas>
+    </div>
+</main>
+{% endblock %}
+
+{% block buttons %}
+<div class="button-wrapper">
+    <button class="action-button" onclick="changePeriod('day')">День</button>
+    <button class="action-button" onclick="changePeriod('week')">Неделя</button>
+    <button class="action-button" onclick="changePeriod('month')">Месяц</button>
+    <button class="action-button" onclick="changePeriod('year')">Год</button>
+    <button class="action-button" onclick="window.location.href='/logout'">Выход</button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script>
+    function changePeriod(period) {
+        window.location.href = `/stuff/profile?period=${period}`;
+    }
+
+    const productRevenueData = {{ product_revenue | tojson }};
+    const topProductsData = {{ top_products_data | tojson }};
+    const employeeRevenueData = {{ employee_revenue | tojson }};
+    const averageCheckData = {{ average_check | tojson }};
+    const salesFrequencyData = {{ sales_frequency | tojson }};
+    const categoryPopularityData = {{ category_popularity | tojson }};
+    
+    const colors = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f', '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac'];
+
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                titleColor: '#ffffff',
+                bodyColor: '#ffffff',
+                cornerRadius: 8,
+                titleFont: {
+                    size: 16,
+                    weight: 'bold'
+                },
+                bodyFont: {
+                    size: 14
+                },
+                padding: 15,
+                displayColors: false,
+                callbacks: {
+                    label: context => `${context.raw || 0}`
+                }
+            },
+            datalabels: {
+                anchor: 'end',
+                align: 'start',
+                color: '#ffffff',
+                font: {
+                    size: 12,
+                    weight: 'bold'
+                },
+                formatter: (value, context) => value > 5 ? value : ''
+            }
+        },
+        layout: {
+            padding: 10
+        },
+        animation: {
+            duration: 2500,
+            easing: 'easeOutElastic'
+        }
+    };
+
+    function renderCharts() {
+        // График "Выручка по товарам"
+        const ctx1 = document.getElementById('productRevenueChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'doughnut',
+            data: {
+                labels: productRevenueData.map(item => item.name),
+                datasets: [{
+                    label: 'Выручка, руб.',
+                    data: productRevenueData.map(item => item.total_revenue),
+                    backgroundColor: colors,
+                    borderWidth: 0,
+                    borderColor: 'rgba(0, 0, 0, 0.1)',
+                    hoverOffset: 15,
+                    hoverBorderColor: '#000'
+                }]
+            },
+            options: chartOptions
+        });
+        const ctx2 = document.getElementById('topProductsChart').getContext('2d');
+
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: topProductsData.map(item => item.name),
+                datasets: [{
+                    label: 'Количество продаж',
+                    data: topProductsData.map(item => item.total_sales),
+                    backgroundColor:  colors,
+                    borderColor: '#4e79a7',
+                    borderRadius: 1,
+                    borderSkipped: false,
+                    hoverBackgroundColor: 'rgba(54, 162, 235, 1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'x',  // Горизонтальная столбчатая диаграмма
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)',
+                            lineWidth: 1
+                        },
+                        ticks: {
+                            color: '#ffffff',
+                            font: {
+                                size: 0,
+                                family: 'Arial, sans-serif',
+                                weight: 'bold'
+                            }
+                        },
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#ffffff',
+                            font: {
+                                size: 14,
+                                family: 'Arial, sans-serif',
+                                weight: 'bold'
+                            },
+                            padding: 10
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff',
+                        cornerRadius: 8,
+                        padding: 15
+                    },
+                    legend: {
+                        display: false  // Скрываем легенду для более чистого вида
+                    }
+                },
+                layout: {
+                    padding: {
+                        top: 20,
+                        right: 20,
+                        bottom: 20,
+                        left: 10
+                    }
+                },
+                animation: {
+                    duration: 1200,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+
+        const ctx3 = document.getElementById('employeeRevenueChart').getContext('2d');
+        new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                labels: employeeRevenueData.map(emp => `${emp.first_name} ${emp.last_name}`),
+                datasets: [{
+                    label: 'Выручка, руб.',
+                    data: employeeRevenueData.map(emp => emp.total_revenue),
+                    backgroundColor: colors,
+                    borderRadius: 15,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                ...chartOptions,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        ticks: { color: '#ffffff' }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        ticks: { color: '#ffffff' }
+                    }
+                }
+            }
+        });
+        // График "Средний чек по сотрудникам"
+        const ctx4 = document.getElementById('averageCheckChart').getContext('2d');
+        new Chart(ctx4, {
+            type: 'bar',
+            data: {
+                labels: averageCheckData.map(item => `${item.first_name} ${item.last_name}`),
+                datasets: [{
+                    label: 'Средний чек, руб.',
+                    data: averageCheckData.map(item => item.average_check),
+                    backgroundColor: colors,
+                    borderRadius: 15,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                ...chartOptions,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        ticks: { color: '#ffffff' }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        ticks: { color: '#ffffff' }
+                    }
+                }
+            }
+        });
+
+        // График "Тренд по часам"
+        const ctx5 = document.getElementById('salesFrequencyChart').getContext('2d');
+        new Chart(ctx5, {
+            type: 'bar',
+            data: {
+                labels: salesFrequencyData.map(item => item.hour),
+                datasets: [{
+                    label: 'Продажи по часам',
+                    data: salesFrequencyData.map(item => item.count),
+                    backgroundColor:  colors,
+                    borderColor: '#4e79a7',
+                    borderRadius: 1,
+                    borderSkipped: false,
+                    hoverBackgroundColor: 'rgba(54, 162, 235, 1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'x',  // Горизонтальная столбчатая диаграмма
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)',
+                            lineWidth: 1
+                        },
+                        ticks: {
+                            color: '#ffffff',
+                            font: {
+                                size: 14,
+                                family: 'Arial, sans-serif',
+                                weight: 'bold'
+                            }
+                        },
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#ffffff',
+                            font: {
+                                size: 14,
+                                family: 'Arial, sans-serif',
+                                weight: 'bold'
+                            },
+                            padding: 10
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff',
+                        cornerRadius: 8,
+                        padding: 15
+                    },
+                    legend: {
+                        display: false  // Скрываем легенду для более чистого вида
+                    }
+                },
+                layout: {
+                    padding: {
+                        top: 20,
+                        right: 20,
+                        bottom: 20,
+                        left: 10
+                    }
+                },
+                animation: {
+                    duration: 1200,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+
+        // График "Тренд по категориям"
+        const ctx6 = document.getElementById('categoryPopularityChart').getContext('2d');
+        new Chart(ctx6, {
+            type: 'bar',
+            data: {
+                labels: categoryPopularityData.map(item => item.category_name),
+                datasets: [{
+                    label: 'Популярность категорий',
+                    data: categoryPopularityData.map(item => item.sales),
+                    backgroundColor:  colors,
+                    borderColor: '#4e79a7',
+                    borderRadius: 1,
+                    borderSkipped: false,
+                    hoverBackgroundColor: 'rgba(54, 162, 235, 1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'x',  // Горизонтальная столбчатая диаграмма
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)',
+                            lineWidth: 1
+                        },
+                        ticks: {
+                            color: '#ffffff',
+                            font: {
+                                size: 0,
+                                family: 'Arial, sans-serif',
+                                weight: 'bold'
+                            }
+                        },
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#ffffff',
+                            font: {
+                                size: 14,
+                                family: 'Arial, sans-serif',
+                                weight: 'bold'
+                            },
+                            padding: 10
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff',
+                        cornerRadius: 8,
+                        padding: 15
+                    },
+                    legend: {
+                        display: false  // Скрываем легенду для более чистого вида
+                    }
+                },
+                layout: {
+                    padding: {
+                        top: 20,
+                        right: 20,
+                        bottom: 20,
+                        left: 10
+                    }
+                },
+                animation: {
+                    duration: 1200,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
+
+    renderCharts();
+</script>
+{% endblock %}

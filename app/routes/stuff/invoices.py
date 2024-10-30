@@ -53,12 +53,11 @@ def get_invoice_details(invoice_id: int, db: Session = Depends(get_db)):
 
 @router.post("/stuff/create_invoice")
 def create_invoice(invoice_request: InvoiceItemData, db: Session = Depends(get_db), user: str = Cookie(None)):
-    print(1)
     # Получаем пользователя
     user_obj = db.query(User).filter(User.username == user).first()
 
     # Создаем новый счет
-    new_invoice = Invoice(user_id=user_obj.id, total_amount=0)
+    new_invoice = Invoice(user_id=user_obj.id, total_amount=0, created_at = datetime.now(pytz.timezone('Europe/Moscow')))
     db.add(new_invoice)
     db.commit()
     db.refresh(new_invoice)

@@ -7,6 +7,12 @@ table {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
+.table-section {
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
+
 th, td {
     padding: 15px 20px;
     text-align: left;
@@ -57,11 +63,36 @@ tbody tr td:nth-child(5):before {
 }
 
 
+.add-row {
+    color: #007bff;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-row:hover {
+    background-color: #e9ecef;
+}
+
+.delete-icon {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.delete-icon:hover {
+    transform: scale(1.2); /* Увеличение значка при наведении */
+}
+
+
+
 .ellipsis-text {
     white-space: nowrap; /* Запрещает перенос строк */
     overflow: hidden; /* Обрезает текст, который выходит за границы */
     text-overflow: ellipsis; /* Добавляет многоточие в конце обрезанного текста */
-    max-width: 300px; /* Устанавливает максимальную ширину, чтобы ограничить выводимый текст */
+    max-width: 100px; /* Устанавливает максимальную ширину, чтобы ограничить выводимый текст */
 }
 
 /* Общие стили для контейнера */
@@ -129,10 +160,33 @@ tbody tr td:nth-child(5):before {
 .charts {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 5px;
     justify-content: center;
     align-items: center;
     margin-top: 30px;
+}
+
+.chart-container {
+    position: relative;
+    background: #4a5568; /* Цвет подложки */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3); /* Тень для 3D-эффекта */
+    margin: 20px 0;
+}
+
+.chart-header {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+canvas {
+    transform: perspective(600px) rotateX(25deg); /* Имитируем 3D-наклон */
 }
 
 /* Отдельные графики */
@@ -144,6 +198,7 @@ tbody tr td:nth-child(5):before {
     border-radius: 8px;
     padding: 15px;
 }
+
 
 /* Адаптация для мобильных устройств */
 @media (max-width: 768px) {
@@ -167,7 +222,7 @@ tbody tr td:nth-child(5):before {
     }
 
     .charts {
-        gap: 15px;
+        gap: 5px;
     }
     
     #product-sales-chart, #product-revenue-chart, #employee-revenue-chart {
